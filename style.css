@@ -1,0 +1,14 @@
+
+.card{
+  max-width: 100%;
+}
+
+.title{
+  background-color: blue;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.next_button{
+  margin: 15px;
+}
