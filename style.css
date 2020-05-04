@@ -12,3 +12,11 @@
 .next_button{
   margin: 15px;
 }
+
+.input_questions{
+  margin:50px;
+  display: inline-block;
+}
+ .te{
+   text-align: center;
+ }

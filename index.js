@@ -19,6 +19,38 @@ $(".btn.btn-warning").on("click" , function(){
   current_question++;
 });
 
+// ---- Firebase function ------
 
 
-var names = ["avishay", "shira", "mira", "amos"];
+$(".btn.btn-dark").on("click",function(){
+  var num = firebase.database().ref().child("num_of_questions");
+  var keys = Object.keys(num);
+  console.log("aaaaaaaaaaaaaaa");
+  console.log(keys);
+
+  window.alert("num of questions is: " + num[keys[0]]);
+
+  var db = firebase.database().ref();
+   db.child("questions/aaa").set({
+     question :{
+       q: "q1",
+       ans:{
+         ans1: "answer!!1",
+         ans2: "ans2!!!"
+       }
+     }
+   });
+  // db.child("questions").push().set({
+  //     question: [{
+  //       q: "how old are you?",
+  //       ans: "my answer zzzzzzzzzzzz"
+  //     }],
+  //     name: "zzzz"
+  // });
+//   firebase.database().ref('users/' + userId).set({
+//   username: name,
+//   email: email,
+//   profile_picture : imageUrl
+// });
+
+});
