@@ -54,3 +54,31 @@ $(".btn.btn-dark").on("click",function(){
 // });
 
 });
+
+$(".btn.btn-danger").on("click",function(){
+  console.log("trying to read data");
+  var db = firebase.database().ref();
+  var a = db.child("questions").orderByChild("name").equalTo("zz");
+  var ref = firebase.database().ref("questions/");
+  ref.once("value")
+    .then(function(snapshot) {
+      var v = snapshot.child("zz").val();
+      console.log("zz = " + v);
+
+      var v = snapshot.child("aaa/question/q").val();
+      console.log("q = " + v);
+
+      var v = snapshot.child("aaa/question/ans/ans1").val();
+      console.log("ans = " + v);
+
+
+
+      // var firstName = snapshot.child("name/first").val(); // "Ada"
+      // var lastName = snapshot.child("name").child("last").val(); // "Lovelace"
+      // var age = snapshot.child("age").val(); // null
+    });
+
+
+
+
+   });
