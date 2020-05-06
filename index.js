@@ -22,7 +22,11 @@ $(".btn.btn-warning").on("click" , function(){
 // ---- Firebase function ------
 
 
-$(".btn.btn-dark").on("click",function(){
+
+
+
+//----On click function for Submit Button
+$(".submit_btn").on("click",function(){
   var num = firebase.database().ref().child("num_of_questions");
   var keys = Object.keys(num);
   console.log("aaaaaaaaaaaaaaa");
@@ -55,10 +59,11 @@ $(".btn.btn-dark").on("click",function(){
 
 });
 
-$(".btn.btn-danger").on("click",function(){
+
+
+//----On click function for Read Button
+$(".read_btn").on("click",function(){
   console.log("trying to read data");
-  var db = firebase.database().ref();
-  var a = db.child("questions").orderByChild("name").equalTo("zz");
   var ref = firebase.database().ref("questions/");
   ref.once("value")
     .then(function(snapshot) {
