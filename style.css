@@ -13,10 +13,19 @@
   margin: 15px;
 }
 
+
+ .te{
+   text-align: center;
+ }
+
+
+/* ------------------ management styles ----------------------*/
+
+.add_questions{
+  margin: 20px;
+}
+
 .input_questions{
   margin:50px;
   display: inline-block;
 }
- .te{
-   text-align: center;
- }
