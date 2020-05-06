@@ -64,9 +64,14 @@ $(".submit_btn").on("click",function(){
 //----On click function for Read Button
 $(".read_btn").on("click",function(){
   console.log("trying to read data");
+<<<<<<< HEAD
   /*var db = firebase.database().ref();
   var a = db.child("questions").orderByChild("name").equalTo("zz");
   */
+=======
+  // var db = firebase.database().ref();
+  // var a = db.child("questions").orderByChild("name").equalTo("zz");
+>>>>>>> eb94a46035ec338fa5d8c6414dffdf86da2e566d
   var ref = firebase.database().ref("questions/");
   ref.once("value")
     .then(function(snapshot) {
