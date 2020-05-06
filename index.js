@@ -21,7 +21,7 @@ $(".btn.btn-warning").on("click" , function(){
 
 // ---- Firebase function ------
 
-
+//###################################################
 
 
 
@@ -64,6 +64,9 @@ $(".submit_btn").on("click",function(){
 //----On click function for Read Button
 $(".read_btn").on("click",function(){
   console.log("trying to read data");
+  /*var db = firebase.database().ref();
+  var a = db.child("questions").orderByChild("name").equalTo("zz");
+  */
   var ref = firebase.database().ref("questions/");
   ref.once("value")
     .then(function(snapshot) {
