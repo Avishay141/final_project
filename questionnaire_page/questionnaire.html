@@ -12,47 +12,84 @@
 
     <title>Simon game</title>
   </head>
-  <body>
+  <body >
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <button type="button" class="btn btn-dark" id="logout_btn">Logout</button>
+      <button type="button" class="btn btn-dark" id="manage_btn">Manage</button>
+      <a class="navbar-brand" href="#"></a>
+      <img
+        src="https://p1.hiclipart.com/preview/213/1021/220/google-logo-background-teacher-school-education-student-world-teachers-day-learning-teacher-education-png-clipart.jpg"
+        width="50" height="50" alt="">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" type="button" id="move_to_main">Home <span class="sr-only">(current)</span></a>
+          </li>
+          
+          
+          
+        </ul>
+  
+  
+      </div>
+    </nav>
+
+
+
     <div class="title">
         <h1>שאלון תזונה</h1>
     </div>
 
 
-    <div class="container">
+    <div class="container" >
         <div class="row">
             <div class="col-sm-3"></div>
 
             <div class="col-sm-6">
-              <div class="question">
-                    <div class="card" style="width: 100%;">
+              <div class="questions_card">
+                    <div class="card" style="width: 100%;" >
                         <img class="card-img-top" style="height: 20vw" src="https://www.nuttedoutnutrition.com.au/wp-content/uploads/2015/06/fruits-and-veg-1000px.jpg" alt="Card image cap">
                         <div class="card-body">
                           <h5 class="card-title">Question 1</h5>
                           <p class="card-text">How much do you eat a day?</p>
-                          <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
-                              <label class="form-check-label" for="exampleRadios1">
-                                answer1
-                              </label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                              <label class="form-check-label" for="exampleRadios2">
-                                answer2
-                              </label>
+
+                          <div class="custom-control custom-radio">
+                            <div class="rd1">
+                                  <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+                                  <label class="custom-control-label" for="customRadio1"><div id="rd_txt1"> answer</div></label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" >
-                            <label class="form-check-label" for="exampleRadios3">
-                              answer3
-                            </label>
+                        <div class="custom-control custom-radio">
+                              <div class="rd2">
+                                  <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                                  <label class="custom-control-label" for="customRadio2"><div id="rd_txt2"> answer</div></label>
+                              </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="option4" >
-                            <label class="form-check-label" for="exampleRadios4">
-                              answer4
-                            </label>
+                        <div class="custom-control custom-radio">
+                              <div class="rd3">
+                                  <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
+                                  <label class="custom-control-label" for="customRadio3"><div id="rd_txt3"> answer</div></label>
+                              </div>
                         </div>
+                        <div class="custom-control custom-radio">
+                              <div class="rd4">
+                                  <input type="radio" id="customRadio4" name="customRadio" class="custom-control-input">
+                                  <label class="custom-control-label" for="customRadio4"><div id="rd_txt4"> answer</div></label>
+                              </div>
+                        </div>
+                        <div class="custom-control custom-radio">
+                              <div class="rd5">
+                                  <input type="radio" id="customRadio5" name="customRadio" class="custom-control-input">
+                                  <label class="custom-control-label" for="customRadio5"><div id="rd_txt5"> answer</div></label>
+                              </div>
+                        </div>
+
 
                           <div class="next_button">
                             <button type="button" class="btn btn-warning">Next</button>
@@ -64,6 +101,23 @@
 
             <div class="col-sm-3"></div>
       </div>
+
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="start_questions">
+              <button type="button" class="btn btn-warning">התחל שאלון</button>
+            </div>
+          </div>
+      </div>
+
+      <div class="custom-control custom-radio">
+            <div class="rd6">
+                <input type="radio" id="customRadio6" name="customRadio" class="custom-control-input">
+                <label class="custom-control-label" for="customRadio6"><div id="rd_txt6"> answer6</div></label>
+            </div>
+      </div>
+
+
   </div>
 
 
@@ -76,29 +130,27 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
 
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-         https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
-
-    <script>
+     <script>
       // Your web app's Firebase configuration
       var firebaseConfig = {
-        apiKey: "AIzaSyAMRFc_CZYt2O-r_v50PU68F9YxKM7L_48",
-        authDomain: "notrition-tel-hai.firebaseapp.com",
-        databaseURL: "https://notrition-tel-hai.firebaseio.com",
-        projectId: "notrition-tel-hai",
-        storageBucket: "notrition-tel-hai.appspot.com",
-        messagingSenderId: "207013424909",
-        appId: "1:207013424909:web:626f0f39f0270a0777ca44",
-        measurementId: "G-XW0NQTDWB9"
+        apiKey: "AIzaSyAG3tKSzvgH1q_eN0CCSYEziQqalb55WT8",
+        authDomain: "nutrition-fbeec.firebaseapp.com",
+        databaseURL: "https://nutrition-fbeec.firebaseio.com",
+        projectId: "nutrition-fbeec",
+        storageBucket: "nutrition-fbeec.appspot.com",
+        messagingSenderId: "100085486574",
+        appId: "1:100085486574:web:205d06fdd7dad9d28974ff",
+        measurementId: "G-FTFZ8X849D"
       };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
     </script>
     <script src="questionnaire.js" charset="utf-8"></script>
   </body>

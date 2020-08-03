@@ -1,31 +1,22 @@
 
-.card{
-  max-width: 100%;
-}
-
-.title{
-  background-color: blue;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.next_button{
-  margin: 15px;
-}
-
-
- .te{
-   text-align: center;
- }
-
 
 /* ------------------ management styles ----------------------*/
 
 .add_questions{
   margin: 20px;
+  text-align: center;
 }
 
-.input_questions{
-  margin:50px;
+.input_question{
+  margin:40px;
   display: inline-block;
+}
+
+.title{
+    display: inline-block;
+}
+
+.answers{
+  float: right;
+
 }

@@ -12,15 +12,56 @@
     <title>management</title>
   </head>
   <body>
-    <h1>Hello, world!</h1>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <button type="button" class="btn btn-dark" id="logout_btn">Logout</button>
+      <a class="navbar-brand" href="#"></a>
+      <img
+        src="https://p1.hiclipart.com/preview/213/1021/220/google-logo-background-teacher-school-education-student-world-teachers-day-learning-teacher-education-png-clipart.jpg"
+        width="50" height="50" alt="">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" type="button" id="move_to_main">Home <span class="sr-only">(current)</span></a>
+          </li>
+          
+          
+          
+        </ul>
+  
+  
+      </div>
+    </nav>
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="background-color: red;"></div>
             <div class="col-sm-6">
-                <h3>הוספת שאלות למאגר</h3>
+
                 <div class="add_questions">
-                    <textarea class="input_questions" rows="3" cols="50"></textarea>
+
+                    <div class="title" style="display: inline-block;">
+                      <h3> הוספת שאלות למאגר</h3>
+                    </div>
+
+                    <textarea class="input_question" rows="3" cols="50" placeholder="הכנס את השאלה כאן..." dir="rtl"></textarea>
+
+
+
+                    <div class="answers" dir="rtl">
+                      <h5>תשובות:</h5>
+                      <textarea id="answer1" rows="1" cols="40" placeholder="תשובה 1..." style="margin:5px;"></textarea>
+                      <textarea id="answer2" rows="1" cols="40" placeholder="תשובה 2..." style="margin:5px;"></textarea>
+                      <textarea id="answer3" rows="1" cols="40" placeholder="תשובה 3..." style="margin:5px;"></textarea>
+                      <textarea id="answer4" rows="1" cols="40" placeholder="תשובה 4..." style="margin:5px;"></textarea>
+                      <textarea id="answer5" rows="1" cols="40" placeholder="תשובה 5..." style="margin:5px;"></textarea>
+                    </div>
 
                     <div class="submit_btn">
                           <button type="button" class="btn btn-dark"   style="display: inline-block;">Submit</button>
@@ -29,7 +70,7 @@
                 </div>
 
                 </div>
-            <div class="col-sm-3"></div>
+            <div class="col-sm-3" style="background-color: red;"></div>
         </div>
     </div>
 
@@ -48,30 +89,28 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
 
-        <!-- TODO: Add SDKs for Firebase products that you want to use
-             https://firebase.google.com/docs/web/setup#available-libraries -->
-        <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
-
-        <script>
-          // Your web app's Firebase configuration
-          var firebaseConfig = {
-            apiKey: "AIzaSyAMRFc_CZYt2O-r_v50PU68F9YxKM7L_48",
-            authDomain: "notrition-tel-hai.firebaseapp.com",
-            databaseURL: "https://notrition-tel-hai.firebaseio.com",
-            projectId: "notrition-tel-hai",
-            storageBucket: "notrition-tel-hai.appspot.com",
-            messagingSenderId: "207013424909",
-            appId: "1:207013424909:web:626f0f39f0270a0777ca44",
-            measurementId: "G-XW0NQTDWB9"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig);
-          firebase.analytics();
-        </script>
+     <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAG3tKSzvgH1q_eN0CCSYEziQqalb55WT8",
+        authDomain: "nutrition-fbeec.firebaseapp.com",
+        databaseURL: "https://nutrition-fbeec.firebaseio.com",
+        projectId: "nutrition-fbeec",
+        storageBucket: "nutrition-fbeec.appspot.com",
+        messagingSenderId: "100085486574",
+        appId: "1:100085486574:web:205d06fdd7dad9d28974ff",
+        measurementId: "G-FTFZ8X849D"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
         <script src="management.js" charset="utf-8"></script>
 
   </body>

@@ -14,18 +14,7 @@
 }
 
 
- .te{
-   text-align: center;
+
+ .start_questions{
+   display: inline-block;
  }
-
-
-/* ------------------ management styles ----------------------*/
-
-.add_questions{
-  margin: 20px;
-}
-
-.input_questions{
-  margin:50px;
-  display: inline-block;
-}
