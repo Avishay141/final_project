@@ -2,7 +2,7 @@
   const db = firebase.database();
   var questions_list = [];
   var MAX_NUM_OF_ANSWERS = 5;
-  var delete_event;
+  var question_to_delete_id;
 
   db.ref("questions/").on("value", get_questions_data);
 
@@ -145,6 +145,7 @@ function update_html_question_list(){
   $(".btn.btn-danger.delete").on("click",delete_btn_click);
   $(".btn.btn-success.save").on("click",save_btn_click);
 
+
 }
 
 
@@ -202,16 +203,15 @@ function save_btn_click(event){
 
 function delete_btn_click(event){
   $('#delete_verify').modal('show');
-  delete_event =event;
-  console.log(event.attr('id'));
-
+  question_to_delete_id = $(this).attr('id')[0];
 }
 
-function delete_question(event){
-   var quest_id = $(this).attr('id')[0];
-   console.log("questions/" + quest_id +"/");
-   db.ref("questions/" + quest_id +"/").remove();
-}
+$('#delete-verify-yes-btn').on("click",function(){
+  console.log("questions/" + question_to_delete_id +"/");
+  db.ref("questions/" + question_to_delete_id +"/").remove();
+});
+
+
 
 function plus_btn_click(event){
   var panel_id =  $(this).attr('id') + "_panel";
