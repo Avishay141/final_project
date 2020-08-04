@@ -16,5 +16,9 @@
 
 
  .start_questions{
-   display: inline-block;
+   
+   text-align: center;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
  }
