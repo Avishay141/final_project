@@ -37,41 +37,122 @@
   
   
       </div>
+      <button type="button" class="btn btn-dark" id="quest_btn" style="float: right;">ערוך שאלות</button>
+      <button type="button" class="btn btn-dark" id="users_btn" style="float: right;">שאלוני המשתמשים</button>
     </nav>
 
     <div class="container">
-        <div class="row">
-            <div class="col-sm-3" style="background-color: red;"></div>
-            <div class="col-sm-6">
 
-                <div class="add_questions">
+      <div class="row questions">
+           
+        <div class="col-sm-12">
+          <div class="edit_questions" id="edit_questions_id" hidden>
+            <div class="title" style="display: inline-block;">
+              <h3> עריכת שאלות</h3>
+            </div>
+
+            <ul class="list-group questions" id="questions_list_id">
+
+
+
+            </ul>
+
+
+          </div>
+
+        </div>
+      </div>
+
+
+        <div class="row questions">
+           
+            <div class="col-sm-12">
+
+                <div class="add_questions" id="add_questions_id" hidden>
 
                     <div class="title" style="display: inline-block;">
                       <h3> הוספת שאלות למאגר</h3>
                     </div>
 
-                    <textarea class="input_question" rows="3" cols="50" placeholder="הכנס את השאלה כאן..." dir="rtl"></textarea>
-
+                    <div class="form-group">
+                      <textarea class="input_question" rows="3" cols="50" placeholder="הכנס את השאלה כאן..." dir="rtl"></textarea>
+                    </div>
 
 
                     <div class="answers" dir="rtl">
-                      <h5>תשובות:</h5>
-                      <textarea id="answer1" rows="1" cols="40" placeholder="תשובה 1..." style="margin:5px;"></textarea>
-                      <textarea id="answer2" rows="1" cols="40" placeholder="תשובה 2..." style="margin:5px;"></textarea>
-                      <textarea id="answer3" rows="1" cols="40" placeholder="תשובה 3..." style="margin:5px;"></textarea>
-                      <textarea id="answer4" rows="1" cols="40" placeholder="תשובה 4..." style="margin:5px;"></textarea>
-                      <textarea id="answer5" rows="1" cols="40" placeholder="תשובה 5..." style="margin:5px;"></textarea>
+                      <div class="form-group">
+                        <h5>תשובות:</h5>
+                      </div>
+                      
+                      <div class="form-group"> 
+                       <textarea id="answer1" rows="1" cols="40" placeholder="תשובה 1..." style="margin:3px;"></textarea>
+                      </div>
+                      <div class="form-group"> 
+                        <textarea id="answer2" rows="1" cols="40" placeholder="תשובה 2..." style="margin:3px;"></textarea>
+                     </div>
+                     <div class="form-group"> 
+                        <textarea id="answer3" rows="1" cols="40" placeholder="תשובה 3..." style="margin:3px;"></textarea>
+                     </div>
+                     <div class="form-group"> 
+                        <textarea id="answer4" rows="1" cols="40" placeholder="תשובה 4..." style="margin:3px;"></textarea>
+                     </div>
+                        <textarea id="answer5" rows="1" cols="40" placeholder="תשובה 5..." style="margin:3px;"></textarea>
                     </div>
 
-                    <div class="submit_btn">
+                    <div class="form-group submit_btn">
                           <button type="button" class="btn btn-dark"   style="display: inline-block;">Submit</button>
                     </div>
 
                 </div>
 
                 </div>
-            <div class="col-sm-3" style="background-color: red;"></div>
+            
         </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+         
+          <div class="col-sm-12">
+            <div class="replyPanel" id="replyPanel_id" hidden>
+            <h3 class="title"> תשובות המשתמשים</h3>
+            <ul class="list-group">
+
+
+
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="save_changes_success" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-body">
+          השינויים נשמרו בהצלחה!
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="payment-success-ok-btn" class="btn btn-secondary" data-dismiss="modal">אישור</button>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="delete_verify" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-body">
+          ?האם אתה בטוח שברצונך למחוק את השאלה
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="delete-verify-yes-btn" class="btn btn-secondary" data-dismiss="modal">כן</button>
+          <button type="button" id="delete-verify-no-btn" class="btn btn-secondary" data-dismiss="modal">לא</button>
+        </div>
+        </div>
+      </div>
     </div>
 
 
