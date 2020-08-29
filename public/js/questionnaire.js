@@ -20,7 +20,7 @@ var num_of_questions;
 var MAX_NUM_OF_ANSWERS = 5;
 var EMPTY = "";
 var user_answers = [];
-var user_answers_ai = [];
+var user_answers_ai = {};
 
 var NONE = -1;
 var userID;
@@ -40,11 +40,12 @@ $(".next_button").on("click", function () {
  
   if (checked_answer != NONE) {
     user_answers.push(questions_list[current_question_num].question+" "+checked_answer);
-    user_answers_ai.push({key:questions_list[current_question_num].id ,value: checked_answer});
+    user_answers_ai[questions_list[current_question_num].id]= checked_answer;
   }
-  else
-    user_answers_ai.push = "user not filled";
-
+  else{
+    user_answers.push("user not filled");
+    user_answers_ai[questions_list[current_question_num].id] = "user not filled";
+  }
   if (document.getElementById("nextAndSumbitBTN").innerHTML == "הזן תוצאות") {
     add_answers_to_db();
     console.log(user_answers);
@@ -57,10 +58,10 @@ $(".next_button").on("click", function () {
 
 /* listener for "התחל שאלון" button */
 $(".start_questions").on("click", function () {
+  if(show_questions == false)
+    show_questions=true;
 
 
-
-  show_questions = !show_questions;
   if (show_questions)
     $(".questions_card").show();
 
@@ -106,7 +107,6 @@ function update_question_card() {
 
   if (num_of_questions - 1 == current_question_num) {
     document.getElementById("nextAndSumbitBTN").innerHTML = "הזן תוצאות";
-    //add_answers_to_db();
   }
   if (num_of_questions == current_question_num) {
     window.alert("Thanks for your help");
@@ -182,10 +182,11 @@ function add_answers_to_db() {
     answers_ai:user_answers_ai,
     answers:user_answers
   });
-
-  // db.ref("questions/").update({
-  //   next_id: new_question.id + 1
-  // });
+  console.log(user_answers+ "  " + user_answers_ai);
+  user_answers=[];
+  user_answers_ai={};
+  document.getElementById("nextAndSumbitBTN").innerHTML = "הבא";
+ 
 
 }
 
