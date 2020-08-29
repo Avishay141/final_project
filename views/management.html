@@ -1,0 +1,106 @@
+<!doctype html>
+<html  lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"  href="/css/management.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>management</title>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <button type="button" class="btn btn-dark" id="logout_btn">Logout</button>
+      <a class="navbar-brand" href="#"></a>
+      <img
+        src="https://p1.hiclipart.com/preview/213/1021/220/google-logo-background-teacher-school-education-student-world-teachers-day-learning-teacher-education-png-clipart.jpg"
+        width="50" height="50" alt="">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" type="button" id="move_to_main">Home <span class="sr-only">(current)</span></a>
+          </li>
+          
+          
+          
+        </ul>
+  
+  
+      </div>
+      <button type="button" class="btn btn-dark" id="quest_btn" style="float: right;">ערוך שאלות</button>
+      <button type="button" class="btn btn-dark" id="users_btn" style="float: right;">שאלוני המשתמשים</button>
+    </nav>
+
+    <div class="container">
+      
+      <div class="col-sm-8 profile">
+        <form action="/action_page.php">
+          <input type="file" id="real_upload_file_btn" name="filename" hidden="hidden">
+          <button type="button" class="btn btn-primary" id="upload_excel_btn">upload excel file</button>
+          <span id="span_text">No file was chosen</span>
+      </form>
+      <button type="submit" class="btn btn-primary" id="save_btn">save</button>
+      </div>
+    
+    
+    </div>
+
+     
+
+    <form action="" method="post">
+      <button type="submit" class="btn btn-primary">Primary</button>
+
+    </form>
+
+
+
+
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+     <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAG3tKSzvgH1q_eN0CCSYEziQqalb55WT8",
+        authDomain: "nutrition-fbeec.firebaseapp.com",
+        databaseURL: "https://nutrition-fbeec.firebaseio.com",
+        projectId: "nutrition-fbeec",
+        storageBucket: "nutrition-fbeec.appspot.com",
+        messagingSenderId: "100085486574",
+        appId: "1:100085486574:web:205d06fdd7dad9d28974ff",
+        measurementId: "G-FTFZ8X849D"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+        <script src="/js/management.js" charset="utf-8"></script>
+
+  </body>
+</html>
