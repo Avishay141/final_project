@@ -32,7 +32,6 @@ var answers;
 
 
 
-
 $("h1").css("color", "white");
 /* listener for "Next" button */
 $(".next_button").on("click", function () {
@@ -190,3 +189,8 @@ function add_answers_to_db() {
 
 }
 
+var excel_json_obj ="";
+function load_questions_from_excel_json(){
+  console.log("@@@@@@@@@@##################");
+  console.log(excel_json_obj);
+}

@@ -1,4 +1,5 @@
 
+
   const db = firebase.database();
   const files_storage = firebase.storage();
   var questions_list = [];
@@ -7,6 +8,7 @@
   var newFileName="";
 
   var current_excel_file_name = "";
+  var selectedFile;
 
   db.ref("excel_file_name/").on("value", get_excel_file_name);
 
@@ -74,12 +76,15 @@ $("#real_upload_file_btn").on("change",function(event){
   console.log("newFileName: " + newFileName);
   var span = document.getElementById("span_text");
   span.innerHTML = newFileName;
+  selectedFile =real_upload_file_btn.files[0];
 
 });
 
 $("#save_btn").on("click",function(event){
   update_excel_file();
 });
+
+
 
 
 function update_excel_file(){
@@ -111,6 +116,26 @@ function get_excel_file_name(data){
   console.log("@@@@@@@@ excel_name: " + current_excel_file_name);
 }
 
+var json_object;
+$("#excel_to_json").on("click",function(event){
+  if(selectedFile){
+      let fileReader = new FileReader();
+      fileReader.readAsBinaryString(selectedFile);
+      fileReader.onload = (event)=>{
+       let data = event.target.result;
+       let workbook = XLSX.read(data,{type:"binary"});
+       console.log(workbook);
+       workbook.SheetNames.forEach(sheet => {
+            let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+            json_object = JSON.stringify(rowObject);
+            console.log(rowObject);
+            console.log("@@____________________________________________@@");
+            console.log(json_object);
+       });
+      }
+
+  }
+});
 
 
 
