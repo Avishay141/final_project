@@ -64,7 +64,10 @@
       <div class="col-sm-3"></div>
 
       <div class="col-sm-6">
-        <div class="questions_card">
+        <div id="dynamic_questions"
+
+        </div>
+        <!-- <div class="questions_card">
           <div class="card" style="width: 100%;">
             <img class="card-img-top" style="height: 20vw"
               src="https://www.nuttedoutnutrition.com.au/wp-content/uploads/2015/06/fruits-and-veg-1000px.jpg"
@@ -120,7 +123,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="col-sm-3"></div>
@@ -181,6 +184,21 @@
     console.log("json_string: " +  json_string);
     excel_json_obj = JSON.parse(json_string);
     load_questions_from_excel_json();
+    
+    var html_questions = document.getElementById("dynamic_questions");
+    var json_root=excel_json_obj.גיליון1;
+    var num_of_questions=(json_root.length)-1;
+    var num_of_ans;
+    for(var i=0;i<num_of_questions;i++){  ///loop on each question
+      num_of_ans=json_root[1];
+      
+    console.log("First Question: " + json_root[1].A);
+      for(var j=0;j<num_of_ans;j++){ //loop on answers of each question
+
+      }
+    }
+    var html_string;
+    html_questions.append(html_string);
   </script>
 </body>
 
