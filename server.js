@@ -12,7 +12,7 @@ const EXCEL_FILE_PATH = __dirname +"/uploads/input.xlsx"
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const UPLOAD_FILE = "upload_file";
-const START_QUEST = "start_quest";
+const GET_QUEST = "get_quest";
 
 // -----------------------------------------------------------------------------//
 
@@ -54,7 +54,8 @@ app.post("/questionnaire.html", function(req, res){
     action_type = req.body[ACTION_TYPE];
     console.log("action_type is: " + action_type);
 
-     if (action_type == START_QUEST){
+     if (action_type == GET_QUEST){
+         console.log("@@@ got GET_QUEST");
         var json_object = convert_excel_to_json();
         res.render("questionnaire" , {the_excel_file: JSON.stringify(json_object)});
     }

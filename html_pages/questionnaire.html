@@ -54,10 +54,12 @@
     <div class="row">
       <div class="col-sm-3"></div>
       <div class="col-sm-6">
-        <form action="" method="post" >
-          <button type="submit" class="btn btn-warning" name="action_type" value="start_quest"> התחל שאלון</button>
+        <form action="" method="post" id="get_questions" >
+          <button type="submit" class="btn btn-warning" name="action_type" value="get_quest">התחל שאלון </button>
         </form>
+        <!-- <button type="button" class="btn btn-primary" id="start_quest">התחל שאלון</button> -->
       </div>
+
       <div class="col-sm-3"></div>
     </div>
     <div class="row">
@@ -174,6 +176,7 @@
     firebase.initializeApp(firebaseConfig);
   </script>
   <script src="/js/questionnaire.js" charset="utf-8"></script>
+  
 </body>
 
 </html>

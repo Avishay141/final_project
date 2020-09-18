@@ -1,13 +1,7 @@
 
 
-// class Question {
-//   constructor(question_data) {
-//     this.id = question_data.id;
-//     this.question = question_data.question;
-//     this.answers = question_data.answers;
-//   }
-// }
 
+const CLUSTER = 'B';
 
 /* ----- initialize variables --------- */
 $(".questions_card").hide();
@@ -25,10 +19,7 @@ var user_answers_ai = {};
 var NONE = -1;
 var userID;
 var answers;
-// questions.push("What is your name?");
-// questions.push("How old are you?");
-// questions.push("What do tou want from me?");
-// questions.push("?שאלה בעברית");
+
 
 
 
@@ -55,25 +46,10 @@ $(".next_button").on("click", function () {
 
 });
 
-/* listener for "התחל שאלון" button */
-$(".start_questions").on("click", function () {
-  if(show_questions == false)
-    show_questions=true;
 
 
-  if (show_questions)
-    $(".questions_card").show();
-
-  get_questions_from_db();
-});
 
 
-/* getting the questions from db */
-function get_questions_from_db() {
-  var ref_questions = db.ref("questions/");
-  ref_questions.on("value", got_questions_data, error_questions_data);
-
-}
 
 function got_questions_data(data) {
   questions_list = [];
@@ -186,11 +162,27 @@ function add_answers_to_db() {
   user_answers_ai={};
   document.getElementById("nextAndSumbitBTN").innerHTML = "הבא";
  
-
 }
+
+
+
 
 var excel_json_obj ="";
 function load_questions_from_excel_json(){
   console.log("@@@@@@@@@@##################");
-  console.log(excel_json_obj);
+  console.log("excel_json_obj @@: " + excel_json_obj);
+  var root = Object.keys(excel_json_obj);
+  console.log(" root: " +root );
+
+  var line0 = excel_json_obj[root][0];
+  var line1 = excel_json_obj[root][1];
+  
+  var cols = Object.keys(line0)
+  console.log(" lines: " + cols);
+
+
+  for(var i=0; i< cols.length; i++){
+    var cell = lines
+    console.log("line " + i +": " + cols)
+  }
 }
