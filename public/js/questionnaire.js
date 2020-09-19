@@ -1,7 +1,22 @@
 
 
-
+const QUESTION = 'A';
 const CLUSTER = 'B';
+const ANS1 = 'C';
+const ANS2 = 'D';
+const ANS3 = 'E';
+const ANS4 = 'F';
+const ANS5 = 'G';
+const ANS6 = 'H';
+const ANS7 = 'I';
+const ANS8 = 'K';
+const ANS9 = 'K';
+const ANS10 = 'L';
+const USER_ANS = 'M';
+const FINAL_CALC = 'N';
+const QUEST_TYPE = 'O';
+const IS_DEPENDED = 'P';
+const DEPENDED_ON = 'Q';
 
 /* ----- initialize variables --------- */
 $(".questions_card").hide();
@@ -27,12 +42,12 @@ $("h1").css("color", "white");
 /* listener for "Next" button */
 $(".next_button").on("click", function () {
   checked_answer = get_user_answer(current_question_num);
- 
+
   if (checked_answer != NONE) {
-    user_answers.push(questions_list[current_question_num].question+" "+checked_answer);
-    user_answers_ai[questions_list[current_question_num].id]= checked_answer;
+    user_answers.push(questions_list[current_question_num].question + " " + checked_answer);
+    user_answers_ai[questions_list[current_question_num].id] = checked_answer;
   }
-  else{
+  else {
     user_answers.push("user not filled");
     user_answers_ai[questions_list[current_question_num].id] = "user not filled";
   }
@@ -154,35 +169,68 @@ $("#manage_btn").on("click", function () {
 function add_answers_to_db() {
 
   db.ref("Users/" + userID).update({
-    answers_ai:user_answers_ai,
-    answers:user_answers
+    answers_ai: user_answers_ai,
+    answers: user_answers
   });
-  console.log(user_answers+ "  " + user_answers_ai);
-  user_answers=[];
-  user_answers_ai={};
+  console.log(user_answers + "  " + user_answers_ai);
+  user_answers = [];
+  user_answers_ai = {};
   document.getElementById("nextAndSumbitBTN").innerHTML = "הבא";
- 
+
 }
 
 
 
-
-var excel_json_obj ="";
-function load_questions_from_excel_json(){
-  console.log("@@@@@@@@@@##################");
-  console.log("excel_json_obj @@: " + excel_json_obj);
+var clusters = [];
+var excel_json_obj = "";
+function load_questions_from_excel_json() {
   var root = Object.keys(excel_json_obj);
-  console.log(" root: " +root );
+  var num_of_questions = (excel_json_obj[root].length) - 1;
 
-  var line0 = excel_json_obj[root][0];
-  var line1 = excel_json_obj[root][1];
-  
-  var cols = Object.keys(line0)
-  console.log(" lines: " + cols);
+  for (var i = 1; i <= num_of_questions; i++) {
+    var question = create_question(i); 
+    if (!(cluster_exist(question.cluster))) {   
+      var new_cluster = {
+        name: (excel_json_obj[root][i][CLUSTER]),
+        questions: []
+      }
+      new_cluster.questions.push(question);
+      clusters.push(new_cluster);
+    }
+    else 
+      add_question_to_cluster(question);
+  }
+  console.log(clusters);
+}
+
+function add_question_to_cluster(question) {
+  for (var i = 0; i < clusters.length; i++) {
+    if (question.cluster === clusters[i].name)
+      clusters[i].questions.push(question);
+  }
+}
 
 
-  for(var i=0; i< cols.length; i++){
-    var cell = lines
-    console.log("line " + i +": " + cols)
+function cluster_exist(cluster_name) {
+  for (var i = 0; i < clusters.length; i++) 
+    if (clusters[i].name === cluster_name)
+      return true; 
+  return false; 
+}
+
+function create_question(i) {
+  var root = Object.keys(excel_json_obj);
+  var curr_row = excel_json_obj[root][i];
+  return {
+    quest: curr_row[QUESTION],
+    cluster: curr_row[CLUSTER],
+    answers: [curr_row[ANS1], curr_row[ANS2], curr_row[ANS3], curr_row[ANS4], curr_row[ANS5],
+    curr_row[ANS6], curr_row[ANS7], curr_row[ANS8], curr_row[ANS9], curr_row[ANS10]],
+    user_ans: curr_row[USER_ANS],
+    question_type: curr_row[QUEST_TYPE],
+    is_depended: curr_row[IS_DEPENDED],
+    depended_on: curr_row[DEPENDED_ON],
+    check_box_ans: new Set(),
+    line: i
   }
 }
