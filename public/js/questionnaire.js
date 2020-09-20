@@ -1,5 +1,5 @@
 
-
+/* ---------- Excel file columns variables mapping ----------*/
 const QUESTION = 'A';
 const CLUSTER = 'B';
 const ANS1 = 'C';
@@ -18,53 +18,66 @@ const QUEST_TYPE = 'O';
 const IS_DEPENDED = 'P';
 const DEPENDED_ON = 'Q';
 
+/* ---------- Visual questions variables ----------*/
+const AMERICAN = "אמריקאית";
+const SLIDER = "סליידר";
+const CHECK_BOX = "check box";
+const RANGE_VLAUE = 'range_vlaue';
+const RANGE_SLIDER = 'range_Slider';
+const NA = 'NA';
+
 /* ----- initialize variables --------- */
-$(".questions_card").hide();
+
 var db = firebase.database();
-var current_question_num = 0;
-var n = 0;
-var questions_list = [];
-var show_questions = false;
-var num_of_questions;
-var MAX_NUM_OF_ANSWERS = 5;
-var EMPTY = "";
-var user_answers = [];
-var user_answers_ai = {};
-
-var NONE = -1;
 var userID;
-var answers;
-
-
 
 
 $("h1").css("color", "white");
+
 /* listener for "Next" button */
 $(".next_button").on("click", function () {
-  checked_answer = get_user_answer(current_question_num);
 
-  if (checked_answer != NONE) {
-    user_answers.push(questions_list[current_question_num].question + " " + checked_answer);
-    user_answers_ai[questions_list[current_question_num].id] = checked_answer;
-  }
-  else {
-    user_answers.push("user not filled");
-    user_answers_ai[questions_list[current_question_num].id] = "user not filled";
-  }
-  if (document.getElementById("nextAndSumbitBTN").innerHTML == "הזן תוצאות") {
-    add_answers_to_db();
-    console.log(user_answers);
-    $(".questions_card").hide();
-  }
-  current_question_num++;
-  update_question_card();
+  save_cluster_answers(current_cluster_index);
+  current_cluster_index++;
+    // chcking that we got to the end of the questionnaire - end of the cluster array (clusters)
+    if(current_cluster_index > clusters.length - 1)
+    return finish_questionnaire();
+    
+  show_cluster(current_cluster_index);
 
 });
 
 
+function save_cluster_answers(){
+  var curr_cluster = clusters[current_cluster_index];
+  var quest_arr = curr_cluster.questions;
+  for(var i =0; i < quest_arr.length; i++){
 
+    var tmp_quest = quest_arr[i];
+    if (tmp_quest.question_type == CHECK_BOX)
+      continue;
+    // the user answers of the check_box questions are already updated. every time the user check or uncheck a box we update.
 
+    if (tmp_quest.question_type == SLIDER){
+      var ans = document.getElementById(RANGE_SLIDER+tmp_quest.line).value;
+      tmp_quest.user_ans = ans;
+      console.log(tmp_quest.line +" ,ans: " + ans);
+    }
+    else{
+      var ans = document.querySelector('input[name='+AMERICAN+tmp_quest.line+']:checked').value;
+      tmp_quest.user_ans = ans;
+      console.log(tmp_quest.line +" ,ans: " + ans);
+    }
+  
 
+  }
+
+}
+
+function finish_questionnaire(){
+  // todo: implement
+  console.log("@@@ finish questionnaire");
+}
 
 function got_questions_data(data) {
   questions_list = [];
@@ -180,10 +193,15 @@ function add_answers_to_db() {
 }
 
 
-
+/* ---------- Functions that create the question objects from Json object ------- */
 var clusters = [];
+var current_cluster_index = 0;
 var excel_json_obj = "";
+
 function load_questions_from_excel_json() {
+  document.getElementById("start_quest_btn").hidden = true;
+  document.getElementsByClassName("card questtions").hidden = false;
+
   var root = Object.keys(excel_json_obj);
   var num_of_questions = (excel_json_obj[root].length) - 1;
 
@@ -201,6 +219,7 @@ function load_questions_from_excel_json() {
       add_question_to_cluster(question);
   }
   console.log(clusters);
+  show_cluster(0); // calling show_cluster with the first cluster
 }
 
 function add_question_to_cluster(question) {
@@ -221,11 +240,11 @@ function cluster_exist(cluster_name) {
 function create_question(i) {
   var root = Object.keys(excel_json_obj);
   var curr_row = excel_json_obj[root][i];
+  var valid_answers = get_valid_answers(curr_row);
   return {
     quest: curr_row[QUESTION],
     cluster: curr_row[CLUSTER],
-    answers: [curr_row[ANS1], curr_row[ANS2], curr_row[ANS3], curr_row[ANS4], curr_row[ANS5],
-    curr_row[ANS6], curr_row[ANS7], curr_row[ANS8], curr_row[ANS9], curr_row[ANS10]],
+    answers: valid_answers,
     user_ans: curr_row[USER_ANS],
     question_type: curr_row[QUEST_TYPE],
     is_depended: curr_row[IS_DEPENDED],
@@ -233,4 +252,132 @@ function create_question(i) {
     check_box_ans: new Set(),
     line: i
   }
+}
+
+function get_valid_answers(curr_row){
+  var all_answers = [curr_row[ANS1], curr_row[ANS2], curr_row[ANS3], curr_row[ANS4], curr_row[ANS5],
+  curr_row[ANS6], curr_row[ANS7], curr_row[ANS8], curr_row[ANS9], curr_row[ANS10]];
+
+  var valid_answers = [];
+  for(var i =0; i < all_answers.length; i++){
+    if(all_answers[i] != NA)
+    valid_answers.push(all_answers[i]);
+  }
+  return valid_answers;
+}
+
+/* ---------- Functions that create the visual html questions ------- */
+
+function show_cluster(cluster_index){
+  /* iterating over the questions in the cluster  and putting the auestions in the screen */
+
+  // cleaning the html screen from the previous cluster
+  $(".cluster").empty();
+  var current_cluster = clusters[cluster_index];
+  document.getElementById("cluster_name_title").innerHTML = current_cluster.name;
+  var cluster_size = current_cluster.questions.length;
+
+  for( var i =0; i < cluster_size; i++){
+      var quest_obj = current_cluster.questions[i];
+      var curr_quest_html = get_question_html(quest_obj);
+      $(".cluster").append(curr_quest_html);
+      if(quest_obj.question_type == SLIDER)
+            set_slider(quest_obj);
+  }
+}
+
+function get_question_html(quest_obj){
+  if(quest_obj.question_type == AMERICAN)
+      return create_american_quest(quest_obj)
+  
+  if(quest_obj.question_type == SLIDER)
+      return create_slider_quest(quest_obj)
+
+  if(quest_obj.question_type == CHECK_BOX)
+      return create_check_box_quest(quest_obj)
+  
+  console.log("Question number " + quest_obj.line + " has unknown question type: " + quest_obj.question_type);
+  
+}
+
+function create_american_quest(q){
+  var quest = '<li>';
+  quest += '<h6>' +q.quest+ '</h6>';
+  for(var i =0; i < q.answers.length; i++){
+      quest += '<li><label><input type="radio" name="'+AMERICAN+q.line+'" value="'+q.answers[i]+'"><span>  '+q.answers[i]+'</span></label></li>';
+  }
+  quest +='</li>';
+
+  return quest;
+}
+
+function create_slider_quest(q){
+  var quest = '<li>' 
+  quest += '<h6>' +q.quest+ '</h6>'
+
+  quest += '<div class="range-wrap">';
+  quest += '<span class="font-weight-bold indigo-text mr-2 mt-1">0</span>';
+  quest += '<div class="range-value" id="'+RANGE_VLAUE+q.line+'"> </div>';
+  quest += '<form>';
+  quest +=  '<input class="rangeSlider" id="'+RANGE_SLIDER+q.line+'" type="range" min="0" max="100" value="0" step="0.1" />';
+  quest += '</form>'
+  quest +=  '<span class="font-weight-bold blue-text mr-2 mt-1">100</span>';
+  quest += '</div>';
+  quest +='</li>';
+  return quest;
+
+}
+
+
+
+function create_check_box_quest(q){
+  var quest = '<li>' 
+  quest += '<h6>' +q.quest+ '</h6>'
+  quest += '<form>';
+  quest +=' <fieldset>';
+
+  for(var i =0; i < q.answers.length; i++){
+      var ans = q.answers[i];
+      console.log("ans type: " + typeof(ans) + " , val: " + ans);
+      quest += '<input type="checkbox" name="'+q.line+'" value="'+q.answers[i]+'" onclick="return update_checkbox_answers('+q.line+',\''+q.answers[i]+'\');"> '+q.answers[i]+'<br>';
+      // quest += '<input type="checkbox" name="'+q.line+'" value="'+q.answers[i]+'" onclick="return test(\''+ans+'\');"> '+q.answers[i]+'<br>';
+
+    }
+
+  quest +=' </fieldset>';
+  quest += '</form>';
+  quest +='</li>';
+  return quest;
+}
+
+
+function update_checkbox_answers(quest_line, answer){
+
+  console.log("@@@ entered update_checkbox_answers");
+  clusters[current_cluster_index].questions.forEach(q => {
+     if(q.line == quest_line){
+          if(q.check_box_ans.has(answer)){
+              console.log("Removing " + answer);
+              q.check_box_ans.delete(answer);
+          }
+          else{
+              console.log("Adding " + answer);
+              q.check_box_ans.add(answer);
+          }
+     }
+  });
+
+}
+
+function set_slider(quest){
+  var range = document.getElementById(RANGE_SLIDER+quest.line);
+  var rangeV = document.getElementById(RANGE_VLAUE+quest.line);
+  setValue = () => {
+    var newValue = Number((range.value - range.min) * 100 / (range.max - range.min));
+    var newPosition = 10 - (newValue * 0.2);
+    rangeV.innerHTML = `<span>${range.value}</span>`;
+    rangeV.style.right = `calc(${newValue}% + (${newPosition}px))`;
+  };
+document.addEventListener("DOMContentLoaded", setValue);
+range.addEventListener('input', setValue);
 }

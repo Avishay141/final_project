@@ -6,13 +6,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
+  <link rel="stylesheet" href="/css/hebrew_format.css">
   <link rel="stylesheet" href="/css/questionnaire.css">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
- 
+
 </head>
 
 <body>
@@ -54,81 +54,37 @@
     <div class="row">
       <div class="col-sm-3"></div>
       <div class="col-sm-6">
-        <form action="" method="post" id="get_questions" >
-          <button type="submit" class="btn btn-warning" name="action_type" value="get_quest">התחל שאלון </button>
+        <form action="" method="post" id="get_questions">
+          <button type="submit" class="btn btn-warning" name="action_type" value="get_quest" id="start_quest_btn">התחל שאלון </button>
         </form>
-        <!-- <button type="button" class="btn btn-primary" id="start_quest">התחל שאלון</button> -->
       </div>
 
       <div class="col-sm-3"></div>
     </div>
+
     <div class="row">
-      <div class="col-sm-3"></div>
-
-      <div class="col-sm-6">
-        <div class="questions_card">
-          <div class="card" style="width: 100%;">
-            <img class="card-img-top" style="height: 20vw"
-              src="https://www.nuttedoutnutrition.com.au/wp-content/uploads/2015/06/fruits-and-veg-1000px.jpg"
-              alt="Card image cap">
-            <div class="card-body">
-              <h5 class="card-title">Question 1</h5>
-              <p class="card-text">How much do you eat a day?</p>
-
-              <div class="custom-control custom-radio">
-                <div class="rd1" id="rd1_id">
-                  <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                  <label class="custom-control-label" for="customRadio1">
-                    <div id="rd_txt1"> </div>
-                  </label>
-                </div>
-              </div>
-              <div class="custom-control custom-radio">
-                <div class="rd2" id="rd2_id">
-                  <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                  <label class="custom-control-label" for="customRadio2">
-                    <div id="rd_txt2"> </div>
-                  </label>
-                </div>
-              </div>
-              <div class="custom-control custom-radio">
-                <div class="rd3" id="rd3_id">
-                  <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
-                  <label class="custom-control-label" for="customRadio3">
-                    <div id="rd_txt3"> </div>
-                  </label>
-                </div>
-              </div>
-              <div class="custom-control custom-radio">
-                <div class="rd4" id="rd4_id">
-                  <input type="radio" id="customRadio4" name="customRadio" class="custom-control-input">
-                  <label class="custom-control-label" for="customRadio4">
-                    <div id="rd_txt4"> </div>
-                  </label>
-                </div>
-              </div>
-              <div class="custom-control custom-radio">
-                <div class="rd5" id="rd5_id">
-                  <input type="radio" id="customRadio5" name="customRadio" class="custom-control-input">
-                  <label class="custom-control-label" for="customRadio5">
-                    <div id="rd_txt5"> </div>
-                  </label>
-                </div>
-              </div>
+      <div class="col-sm-1"></div>
+      <div class="col-sm-10">
+        <div class="card questtions" style="width: 100%;" hidden>
+          <h2 class="card-title" style="height: 5vw" id="cluster_name_title"></h2>
+          <div class="card-body">
 
 
-              <div class="next_button">
-                <button type="button" id="nextAndSumbitBTN" class="btn btn-warning">הבא</button>
-              </div>
+            <ul class="cluster">
+
+
+            </ul>
+
+
+            <div class="next_button">
+              <button type="button" id="nextAndSumbitBTN" class="btn btn-warning">הבא</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-sm-3"></div>
 
-
-      
+      <div class="col-sm-1"></div>
     </div>
 
 
@@ -176,7 +132,7 @@
     firebase.initializeApp(firebaseConfig);
   </script>
   <script src="/js/questionnaire.js" charset="utf-8"></script>
-  
+
 </body>
 
 </html>
