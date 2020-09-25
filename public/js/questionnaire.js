@@ -42,7 +42,7 @@ $(".next_button").on("click", function () {
     // chcking that we got to the end of the questionnaire - end of the cluster array (clusters)
     if(current_cluster_index > clusters.length - 1)
     return finish_questionnaire();
-    
+
   show_cluster(current_cluster_index);
 
 });
@@ -72,11 +72,6 @@ function save_cluster_answers(){
 
   }
 
-}
-
-function finish_questionnaire(){
-  // todo: implement
-  console.log("@@@ finish questionnaire");
 }
 
 function got_questions_data(data) {
@@ -167,6 +162,24 @@ function get_userID_from_url() {
   console.log("userID from url: " + res);
   return res;
 }
+async function finish_questionnaire(){
+  // todo: implement
+  console.log("@@@ finish questionnaire");
+  const options = {
+    method: 'POST',
+    headers: {
+      // 'Content-Type': 'text/plain'
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(clusters)
+
+  };
+  var res = await fetch('/calculate_answers', options);
+  // var quest_json_str = await res.text();
+  // console.log("@@@ quest_json_object after stringify: \n "+ quest_json_str);
+  // var quest_json_object = JSON.parse(quest_json_str);
+
+}
 
 $("#logout_btn").on("click", function () {
   firebase.auth().signOut();
@@ -177,7 +190,37 @@ $("#manage_btn").on("click", function () {
   window.location = "/management.html?uid=" + userID;
 });
 
+$("#start_quest_btn").on("click", function () { 
+  run_questionnaire();
 
+});
+
+async function run_questionnaire(){
+  var quest_json_object = await get_questions_from_server();
+  load_questions_from_excel_json(quest_json_object);
+  hide_and_show_relevant_html_elements();
+  show_cluster(0); // calling show_cluster with the first cluster
+}
+
+async function get_questions_from_server(){
+  const options = {
+    method: 'GET',
+    headers: {
+      //'Content-Type': 'application/json'
+      'Content-Type': 'text/plain'
+    }
+  };
+  var res = await fetch('/get_questions', options);
+  var quest_json_str = await res.text();
+  var quest_json_object = JSON.parse(quest_json_str);
+  return quest_json_object;
+}
+
+function hide_and_show_relevant_html_elements(){
+  // hiding and showing relevant elements in html
+  document.getElementById("start_quest_btn").hidden = true;
+  document.getElementById("card_questions").hidden = false;
+}
 
 function add_answers_to_db() {
 
@@ -196,17 +239,13 @@ function add_answers_to_db() {
 /* ---------- Functions that create the question objects from Json object ------- */
 var clusters = [];
 var current_cluster_index = 0;
-var excel_json_obj = "";
 
-function load_questions_from_excel_json() {
-  document.getElementById("start_quest_btn").hidden = true;
-  document.getElementsByClassName("card questtions").hidden = false;
-
+function load_questions_from_excel_json(excel_json_obj) {
   var root = Object.keys(excel_json_obj);
   var num_of_questions = (excel_json_obj[root].length) - 1;
 
   for (var i = 1; i <= num_of_questions; i++) {
-    var question = create_question(i); 
+    var question = create_question(i, excel_json_obj); 
     if (!(cluster_exist(question.cluster))) {   
       var new_cluster = {
         name: (excel_json_obj[root][i][CLUSTER]),
@@ -218,8 +257,8 @@ function load_questions_from_excel_json() {
     else 
       add_question_to_cluster(question);
   }
-  console.log(clusters);
-  show_cluster(0); // calling show_cluster with the first cluster
+
+
 }
 
 function add_question_to_cluster(question) {
@@ -237,7 +276,7 @@ function cluster_exist(cluster_name) {
   return false; 
 }
 
-function create_question(i) {
+function create_question(i, excel_json_obj) {
   var root = Object.keys(excel_json_obj);
   var curr_row = excel_json_obj[root][i];
   var valid_answers = get_valid_answers(curr_row);
@@ -266,12 +305,14 @@ function get_valid_answers(curr_row){
   return valid_answers;
 }
 
+
 /* ---------- Functions that create the visual html questions ------- */
 
 function show_cluster(cluster_index){
   /* iterating over the questions in the cluster  and putting the auestions in the screen */
 
-  // cleaning the html screen from the previous cluster
+
+  console.log("entered show_cluster");
   $(".cluster").empty();
   var current_cluster = clusters[cluster_index];
   document.getElementById("cluster_name_title").innerHTML = current_cluster.name;
@@ -289,7 +330,7 @@ function show_cluster(cluster_index){
 function get_question_html(quest_obj){
   if(quest_obj.question_type == AMERICAN)
       return create_american_quest(quest_obj)
-  
+
   if(quest_obj.question_type == SLIDER)
       return create_slider_quest(quest_obj)
 
@@ -328,8 +369,6 @@ function create_slider_quest(q){
 
 }
 
-
-
 function create_check_box_quest(q){
   var quest = '<li>' 
   quest += '<h6>' +q.quest+ '</h6>'
@@ -349,7 +388,6 @@ function create_check_box_quest(q){
   quest +='</li>';
   return quest;
 }
-
 
 function update_checkbox_answers(quest_line, answer){
 
@@ -381,3 +419,6 @@ function set_slider(quest){
 document.addEventListener("DOMContentLoaded", setValue);
 range.addEventListener('input', setValue);
 }
+
+
+

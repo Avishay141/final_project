@@ -22,6 +22,7 @@ app.use(upload());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.static('html_pages'));
+app.use(express.json());
 
 
 app.listen(4000, function(){
@@ -50,25 +51,27 @@ app.post("/management.html", function(req, res){
     console.log("@@@@@@@ got here")
 });
 
-app.post("/questionnaire.html", function(req, res){
-    action_type = req.body[ACTION_TYPE];
-    console.log("action_type is: " + action_type);
+app.post("/calculate_answers", function(req, res){
+    console.log("get a calculate_answers request !!!!");
+    console.log(req.body);
+    var clusters = req.body;
 
-     if (action_type == GET_QUEST){
-         console.log("@@@ got GET_QUEST");
-        var json_object = convert_excel_to_json();
-        res.render("questionnaire" , {the_excel_file: JSON.stringify(json_object)});
-    }
-    else if (action_type == "test"){
-        var json_object = convert_excel_to_json();
-        res.render("questionnaire" , {the_excel_file: JSON.stringify(json_object)});
-    }
-    else{
-        console.log("Unknown post request");
-        res.status(204).send()
-    }
+    // need to implement the next functions
+    write_answers_to_excel(clusters);
+    read_final_grade_and_update_clusters();
+    //send the clusters back to the user
+    res.end(); // temporery
+
+
     
-    console.log("@@@@@@@ got here")
+});
+// Handling get request
+app.get("/get_questions", function(req, res){
+    console.log("@@@ got a tt get request");
+    var excel_json_obj = convert_excel_to_json();
+    var excel_json_string = JSON.stringify(excel_json_obj)
+    res.send(excel_json_string);
+ 
 });
 
 // Send the home page to the user
@@ -143,4 +146,12 @@ function convert_excel_to_json(){
     });
     console.log("json_excel: " + json_object);
     return json_object;
+}
+
+function write_answers_to_excel(clusters){
+    console.log("need to implement write_answers_to_excel func");
+}
+
+function read_final_grade_and_update_clusters(){
+    console.log("need to implement read_final_grade_and_update_clusters func");
 }
