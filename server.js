@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const xlsx = require("xlsx")
 const upload = require('express-fileupload');
 const excelToJson = require('convert-excel-to-json');
+const ExcelJS = require('exceljs');
 
 // Const Variables
 const RC_SUCCESS = 0;
@@ -13,6 +14,11 @@ const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const UPLOAD_FILE = "upload_file";
 const GET_QUEST = "get_quest";
+const AMERICAN = "אמריקאית";
+const SLIDER = "סליידר";
+const CHECK_BOX = "check box";
+const USER_ANSWER_COL = 0; // in sheet B
+const FINAL_CALC_COL = 13;
 
 // -----------------------------------------------------------------------------//
 
@@ -57,8 +63,8 @@ app.post("/calculate_answers", function(req, res){
     var clusters = req.body;
 
     // need to implement the next functions
-    write_answers_to_excel(clusters);
-    read_final_grade_and_update_clusters();
+    var tmp_file_path = write_answers_to_excel(clusters);
+    read_final_grade_and_update_clusters(tmp_file_path, clusters);
     //send the clusters back to the user
     res.end(); // temporery
 
@@ -149,9 +155,70 @@ function convert_excel_to_json(){
 }
 
 function write_answers_to_excel(clusters){
-    console.log("need to implement write_answers_to_excel func");
+    var execl_file =  xlsx.readFile("./uploads/input.xlsx");
+  
+    var sheet_A = execl_file.Sheets[execl_file.SheetNames[0]];
+    var sheet_B = execl_file.Sheets[execl_file.SheetNames[1]];
+    console.log('sheet_A name: ' + execl_file.SheetNames[0]);
+    console.log('sheet_B name: ' + execl_file.SheetNames[1]);
+
+
+
+    for(var i = 0; i < clusters.length; i++){
+        var curr_questions = clusters[i].questions;
+        for(var j = 0; j < curr_questions.length; j++){
+            curr_quest = curr_questions[j];
+            if(curr_quest.question_type == CHECK_BOX){
+                console.log("this is a check box question");
+            }
+            else{
+                var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:USER_ANSWER_COL});
+                
+                sheet_B[user_ans_cell].v = String(curr_quest.user_ans).trim();
+                console.log("user_ans_cell: " + user_ans_cell + ", wiriting: " + sheet_B[user_ans_cell].v);
+            }
+        }
+    }
+
+   
+    var random_num = String(Math.floor(Math.random() * 10000000));
+    //var random_num = "1";
+    var res_file_path = "./tmp/res"+random_num+".xlsx";
+    xlsx.writeFile(execl_file, res_file_path);
+    console.log("Finish writing answers to excel");
+    return res_file_path;
 }
 
-function read_final_grade_and_update_clusters(){
-    console.log("need to implement read_final_grade_and_update_clusters func");
+function read_final_grade_and_update_clusters(res_file_path, clusters){
+    var execl_with_answers =  xlsx.readFile(res_file_path);
+    var sheet_A = execl_with_answers.Sheets[execl_with_answers.SheetNames[0]];
+    sheet_A['R1'].v = '1';
+    xlsx.writeFile(execl_with_answers, res_file_path);
+
+    execl_with_answers =  xlsx.readFile(res_file_path);
+    sheet_A = execl_with_answers.Sheets[execl_with_answers.SheetNames[0]];
+  
+    for(var i = 0; i < clusters.length; i++){
+        var curr_questions = clusters[i].questions;
+        for(var j = 0; j < curr_questions.length; j++){
+            curr_quest = curr_questions[j];
+            if(curr_quest.question_type == CHECK_BOX){
+                console.log("this is a check box question");
+            }
+            else{
+                var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL});
+                curr_quest.grade =  sheet_A[final_calc_cell].v;
+                console.log("final calc cell: " + final_calc_cell +", curr_quest.grade: " + curr_quest.grade);
+            }
+        }
+    }
+    
+    for(var i = 0; i < clusters.length; i++){
+        var curr_questions = clusters[i].questions;
+        for(var j = 0; j < curr_questions.length; j++){
+            console.log("question: " + curr_questions[j].line + ", grade: " + curr_questions[j].grade);
+        }
+    }
+
+
 }
