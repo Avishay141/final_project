@@ -9,7 +9,7 @@ $("#sbmt").on("click",function(){
  var password = $("#Password1").val();
  var verify = $("#Password2").val();
  var name =  $("#user_name").val();
-
+ var gender = $('input[name=userGenderRadios]:checked').val();
  if(verify != password){
 	 alert("wrong password verification");
 	 return;
@@ -32,7 +32,8 @@ var user_created_successfully = false;
 			//var db = firebase.database().ref();
 			db.child(path).set({
 				userEmail: email,
-				name: name
+				name: name,
+				gender: gender
 			}).catch(function(error){
 				console.log("Error ocurred: ", error);
 			});
