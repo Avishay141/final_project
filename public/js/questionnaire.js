@@ -28,6 +28,7 @@ const NA = 'NA';
 
 /* ----- initialize variables --------- */
 
+const NON = -1;
 var db = firebase.database();
 var userID;
 
@@ -162,6 +163,7 @@ function get_userID_from_url() {
   console.log("userID from url: " + res);
   return res;
 }
+
 async function finish_questionnaire(){
   // todo: implement
   console.log("@@@ finish questionnaire");
@@ -241,7 +243,8 @@ var clusters = [];
 var current_cluster_index = 0;
 
 function load_questions_from_excel_json(excel_json_obj) {
-  var root = Object.keys(excel_json_obj);
+  var root = Object.keys(excel_json_obj)[0];
+  console.log("root type: " + root);
   var num_of_questions = (excel_json_obj[root].length) - 1;
 
   for (var i = 1; i <= num_of_questions; i++) {
@@ -277,7 +280,7 @@ function cluster_exist(cluster_name) {
 }
 
 function create_question(i, excel_json_obj) {
-  var root = Object.keys(excel_json_obj);
+  var root = Object.keys(excel_json_obj)[0];
   var curr_row = excel_json_obj[root][i];
   var valid_answers = get_valid_answers(curr_row);
   return {
@@ -289,7 +292,8 @@ function create_question(i, excel_json_obj) {
     is_depended: curr_row[IS_DEPENDED],
     depended_on: curr_row[DEPENDED_ON],
     check_box_ans: new Set(),
-    line: i
+    line: i,
+    grade: NON
   }
 }
 
