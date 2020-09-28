@@ -174,13 +174,17 @@ async function finish_questionnaire(){
   const options = {
     method: 'POST',
     headers: {
-      // 'Content-Type': 'text/plain'
+       //'Content-Type': 'text/plain'
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(clusters)
 
   };
   var res = await fetch('/calculate_answers', options);
+  clusters = await res.json();
+  print_clusters(clusters);
+  
+
   // var quest_json_str = await res.text();
   // console.log("@@@ quest_json_object after stringify: \n "+ quest_json_str);
   // var quest_json_object = JSON.parse(quest_json_str);
@@ -438,5 +442,15 @@ document.addEventListener("DOMContentLoaded", setValue);
 range.addEventListener('input', setValue);
 }
 
+function print_clusters(clusters_arr){
+  for(var i = 0; i < clusters_arr.length; i++){
+    var curr_questions = clusters_arr[i].questions;
+    for(var j = 0; j < curr_questions.length; j++){
+        q = curr_questions[j];
+        console.log("question " +q.line + ", user_ans: " + q.user_ans +", grade: " + q.grade);
+  
+    }
+}
 
+}
 

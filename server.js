@@ -19,7 +19,7 @@ const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
 const CHECK_BOX = "check box";
 const USER_ANSWER_COL = 0; // in sheet B
-const FINAL_CALC_COL = 13;
+const FINAL_CALC_COL = 14;
 
 // -----------------------------------------------------------------------------//
 
@@ -58,14 +58,16 @@ app.post("/management.html", function(req, res){
     console.log("@@@@@@@ got here")
 });
 
-app.post("/calculate_answers", function(req, res){
+app.post("/calculate_answers", async function(req, res){
     console.log("get a calculate_answers request !!!!");
     console.log(req.body);
     var clusters = req.body;
     var tmp_file_path = write_answers_to_excel(clusters);
-    var updated_clusters = read_final_grade_and_update_clusters(tmp_file_path, clusters);
+    var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
     var updated_clusters_json_object = JSON.stringify(updated_clusters);
-    res.send(updated_clusters_json_object);     //send the updated clusters back to the user
+    console.log("this is after calling read_final_grade_and_update_clusters()");
+    console.log(updated_clusters_json_object);
+    res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
 // Handling get request
@@ -139,9 +141,7 @@ function write_answers_to_excel(clusters){
             }
             else{
                 var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:USER_ANSWER_COL});
-                
                 worksheet[user_ans_cell].v = String(curr_quest.user_ans).trim();
-                console.log("user_ans_cell: " + user_ans_cell + ", wiriting: " + worksheet[user_ans_cell].v);
             }
         }
     }
@@ -156,12 +156,14 @@ function write_answers_to_excel(clusters){
 
 const parser = new FormulaParser();
 
-function read_final_grade_and_update_clusters(res_file_path, clusters){
-
+ async function read_final_grade_and_update_clusters(res_file_path, clusters){
+    console.log("!!! Entered read_final_grade_and_update_clusters");
     const execl_with_answers = new ExcelJS.Workbook();
-    
-    execl_with_answers.xlsx.readFile(res_file_path).then(() => {
+
+    await execl_with_answers.xlsx.readFile(res_file_path).then(() => {
+        console.log("!!! Entered then part");
         var worksheet = execl_with_answers.getWorksheet(1);
+
         parser.on('callCellValue', function(cellCoord, done) {
         if (worksheet.getCell(cellCoord.label).formula) {
             done(parser.parse(worksheet.getCell(cellCoord.label).formula).result);
@@ -169,32 +171,31 @@ function read_final_grade_and_update_clusters(res_file_path, clusters){
             done(worksheet.getCell(cellCoord.label).value);
         }
         });
-
+     
         for(var i = 0; i < clusters.length; i++){
             var curr_questions = clusters[i].questions;
             for(var j = 0; j < curr_questions.length; j++){
                 curr_quest = curr_questions[j];
                 if(curr_quest.question_type == CHECK_BOX){
-                    console.log("this is a check box question");
+                    console.log("this is a check box question 2");
                 }
                 else{
                     var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL});
                     curr_quest.grade = getCellResult(worksheet, final_calc_cell);
     
-                    console.log("final cell " + final_calc_cell + "value : " + curr_quest.grade);
-    
                 }
             }
         }
-
-        return clusters;
+      
     });
+    return clusters;
 }
 
 function getCellResult(worksheet, cellLabel) {
     if (worksheet.getCell(cellLabel).formula) {
       return parser.parse(worksheet.getCell(cellLabel).formula).result;
-    } else {
+    } 
+    else {
       return worksheet.getCell(cellCoord.label).value;
     }
   }
