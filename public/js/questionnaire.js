@@ -1,22 +1,24 @@
 
 /* ---------- Excel file columns variables mapping ----------*/
-const QUESTION = 'A';
-const CLUSTER = 'B';
-const ANS1 = 'C';
-const ANS2 = 'D';
-const ANS3 = 'E';
-const ANS4 = 'F';
-const ANS5 = 'G';
-const ANS6 = 'H';
-const ANS7 = 'I';
+
+const QUESTION_M = 'A';
+const QUESTION_F = 'B';
+const CLUSTER = 'C';
+const ANS1 = 'D';
+const ANS2 = 'E';
+const ANS3 = 'F';
+const ANS4 = 'G';
+const ANS5 = 'H';
+const ANS6 = 'I';
+const ANS7 = 'J';
 const ANS8 = 'K';
-const ANS9 = 'K';
-const ANS10 = 'L';
-const USER_ANS = 'M';
-const FINAL_CALC = 'N';
-const QUEST_TYPE = 'O';
-const IS_DEPENDED = 'P';
-const DEPENDED_ON = 'Q';
+const ANS9 = 'L';
+const ANS10 = 'M';
+const USER_ANS = 'N';
+const FINAL_CALC = 'O';
+const QUEST_TYPE = 'P';
+const IS_DEPENDED = 'Q';
+const DEPENDED_ON = 'R';
 
 /* ---------- Visual questions variables ----------*/
 const AMERICAN = "אמריקאית";
@@ -29,9 +31,11 @@ const NA = 'NA';
 /* ----- initialize variables --------- */
 
 const NON = -1;
+var question=QUESTION_M;
 var db = firebase.database();
-var userID;
-
+var user_gender; 
+var userID = get_userID_from_url();
+db.ref("Users/"+userID).on("value", get_gender);
 
 $("h1").css("color", "white");
 
@@ -244,7 +248,6 @@ var current_cluster_index = 0;
 
 function load_questions_from_excel_json(excel_json_obj) {
   var root = Object.keys(excel_json_obj)[0];
-  console.log("root type: " + root);
   var num_of_questions = (excel_json_obj[root].length) - 1;
 
   for (var i = 1; i <= num_of_questions; i++) {
@@ -283,8 +286,13 @@ function create_question(i, excel_json_obj) {
   var root = Object.keys(excel_json_obj)[0];
   var curr_row = excel_json_obj[root][i];
   var valid_answers = get_valid_answers(curr_row);
+  if(user_gender=="Male")
+    question=QUESTION_M;
+  else
+    question=QUESTION_F;
+    
   return {
-    quest: curr_row[QUESTION],
+    quest: curr_row[question],
     cluster: curr_row[CLUSTER],
     answers: valid_answers,
     user_ans: curr_row[USER_ANS],
@@ -293,8 +301,14 @@ function create_question(i, excel_json_obj) {
     depended_on: curr_row[DEPENDED_ON],
     check_box_ans: new Set(),
     line: i,
-    grade: NON
+    grade: NON,
+    gender: user_gender
   }
+}
+
+function get_gender(data){
+  var user= data.val();
+  user_gender=user.gender;
 }
 
 function get_valid_answers(curr_row){
