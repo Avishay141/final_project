@@ -5,6 +5,7 @@ const xlsx = require("xlsx")
 const upload = require('express-fileupload');
 const excelToJson = require('convert-excel-to-json');
 const ExcelJS = require('exceljs');
+const FormulaParser = require('hot-formula-parser').Parser;
 
 // Const Variables
 const RC_SUCCESS = 0;
@@ -61,15 +62,11 @@ app.post("/calculate_answers", function(req, res){
     console.log("get a calculate_answers request !!!!");
     console.log(req.body);
     var clusters = req.body;
-
-    // need to implement the next functions
     var tmp_file_path = write_answers_to_excel(clusters);
-    read_final_grade_and_update_clusters(tmp_file_path, clusters);
-    //send the clusters back to the user
-    res.end(); // temporery
+    var updated_clusters = read_final_grade_and_update_clusters(tmp_file_path, clusters);
+    var updated_clusters_json_object = JSON.stringify(updated_clusters);
+    res.send(updated_clusters_json_object);     //send the updated clusters back to the user
 
-
-    
 });
 // Handling get request
 app.get("/get_questions", function(req, res){
@@ -120,31 +117,6 @@ function download_excel_file(req, res){
     res.download(__dirname +'/uploads/input.xlsx','input.xlsx');
 }
 
-function xl_func(){
-    console.log("path is: " + __dirname)
-    var workbook =  xlsx.readFile("./uploads/input.xlsx");
-
-    var first_sheet_name = workbook.SheetNames[0];
-    console.log(first_sheet_name)
-    var worksheet = workbook.Sheets[first_sheet_name];
-
-
-    var cell = worksheet['A2'].v;
-    console.log(cell);
-
-    // modify value in D4
-    worksheet['L2'].v = 'הרבה';
-
-    xlsx.writeFile(workbook, "./uploads/res.xlsx");
-
-    ////////////////////////////////
-
-    workbook =  xlsx.readFile("./uploads/res.xlsx");
-    cell = worksheet['L2'].v;
-    console.log("L2 cell is: " + cell);
-
-}
-
 function convert_excel_to_json(){
     console.log("!!!!!!! EXCEL_FILE_PATH: " + EXCEL_FILE_PATH);
     var json_object = excelToJson({
@@ -156,13 +128,7 @@ function convert_excel_to_json(){
 
 function write_answers_to_excel(clusters){
     var execl_file =  xlsx.readFile("./uploads/input.xlsx");
-  
-    var sheet_A = execl_file.Sheets[execl_file.SheetNames[0]];
-    var sheet_B = execl_file.Sheets[execl_file.SheetNames[1]];
-    console.log('sheet_A name: ' + execl_file.SheetNames[0]);
-    console.log('sheet_B name: ' + execl_file.SheetNames[1]);
-
-
+    var worksheet = execl_file.Sheets[execl_file.SheetNames[0]];
 
     for(var i = 0; i < clusters.length; i++){
         var curr_questions = clusters[i].questions;
@@ -174,51 +140,61 @@ function write_answers_to_excel(clusters){
             else{
                 var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:USER_ANSWER_COL});
                 
-                sheet_B[user_ans_cell].v = String(curr_quest.user_ans).trim();
-                console.log("user_ans_cell: " + user_ans_cell + ", wiriting: " + sheet_B[user_ans_cell].v);
+                worksheet[user_ans_cell].v = String(curr_quest.user_ans).trim();
+                console.log("user_ans_cell: " + user_ans_cell + ", wiriting: " + worksheet[user_ans_cell].v);
             }
         }
     }
 
-   
-    var random_num = String(Math.floor(Math.random() * 10000000));
-    //var random_num = "1";
+    //var random_num = String(Math.floor(Math.random() * 10000000));
+    var random_num = "1";
     var res_file_path = "./tmp/res"+random_num+".xlsx";
     xlsx.writeFile(execl_file, res_file_path);
     console.log("Finish writing answers to excel");
     return res_file_path;
 }
 
+const parser = new FormulaParser();
+
 function read_final_grade_and_update_clusters(res_file_path, clusters){
-    var execl_with_answers =  xlsx.readFile(res_file_path);
-    var sheet_A = execl_with_answers.Sheets[execl_with_answers.SheetNames[0]];
-    sheet_A['R1'].v = '1';
-    xlsx.writeFile(execl_with_answers, res_file_path);
 
-    execl_with_answers =  xlsx.readFile(res_file_path);
-    sheet_A = execl_with_answers.Sheets[execl_with_answers.SheetNames[0]];
-  
-    for(var i = 0; i < clusters.length; i++){
-        var curr_questions = clusters[i].questions;
-        for(var j = 0; j < curr_questions.length; j++){
-            curr_quest = curr_questions[j];
-            if(curr_quest.question_type == CHECK_BOX){
-                console.log("this is a check box question");
-            }
-            else{
-                var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL});
-                curr_quest.grade =  sheet_A[final_calc_cell].v;
-                console.log("final calc cell: " + final_calc_cell +", curr_quest.grade: " + curr_quest.grade);
-            }
-        }
-    }
+    const execl_with_answers = new ExcelJS.Workbook();
     
-    for(var i = 0; i < clusters.length; i++){
-        var curr_questions = clusters[i].questions;
-        for(var j = 0; j < curr_questions.length; j++){
-            console.log("question: " + curr_questions[j].line + ", grade: " + curr_questions[j].grade);
+    execl_with_answers.xlsx.readFile(res_file_path).then(() => {
+        var worksheet = execl_with_answers.getWorksheet(1);
+        parser.on('callCellValue', function(cellCoord, done) {
+        if (worksheet.getCell(cellCoord.label).formula) {
+            done(parser.parse(worksheet.getCell(cellCoord.label).formula).result);
+        } else {
+            done(worksheet.getCell(cellCoord.label).value);
         }
-    }
+        });
 
+        for(var i = 0; i < clusters.length; i++){
+            var curr_questions = clusters[i].questions;
+            for(var j = 0; j < curr_questions.length; j++){
+                curr_quest = curr_questions[j];
+                if(curr_quest.question_type == CHECK_BOX){
+                    console.log("this is a check box question");
+                }
+                else{
+                    var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL});
+                    curr_quest.grade = getCellResult(worksheet, final_calc_cell);
+    
+                    console.log("final cell " + final_calc_cell + "value : " + curr_quest.grade);
+    
+                }
+            }
+        }
 
+        return clusters;
+    });
 }
+
+function getCellResult(worksheet, cellLabel) {
+    if (worksheet.getCell(cellLabel).formula) {
+      return parser.parse(worksheet.getCell(cellLabel).formula).result;
+    } else {
+      return worksheet.getCell(cellCoord.label).value;
+    }
+  }
