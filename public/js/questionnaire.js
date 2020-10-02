@@ -14,11 +14,11 @@ const ANS7 = 'J';
 const ANS8 = 'K';
 const ANS9 = 'L';
 const ANS10 = 'M';
-const USER_ANS = 'N';
-const FINAL_CALC = 'O';
-const QUEST_TYPE = 'P';
-const IS_DEPENDED = 'Q';
-const DEPENDED_ON = 'R';
+const FINAL_CALC = 'N';
+const QUEST_TYPE = 'O';
+const IS_DEPENDED = 'P';
+const DEPENDED_ON = 'Q';
+const USER_ANS1 = 'S';
 
 /* ---------- Visual questions variables ----------*/
 const AMERICAN = "אמריקאית";
@@ -147,7 +147,7 @@ function get_user_answer(question_number) {
       return document.getElementById('rd_txt' + i).innerText;
 
   }
-  return NONE;
+  return NON;
 }
 
 
@@ -299,7 +299,7 @@ function create_question(i, excel_json_obj) {
     quest: curr_row[question],
     cluster: curr_row[CLUSTER],
     answers: valid_answers,
-    user_ans: curr_row[USER_ANS],
+    user_ans: curr_row[USER_ANS1],
     question_type: curr_row[QUEST_TYPE],
     is_depended: curr_row[IS_DEPENDED],
     depended_on: curr_row[DEPENDED_ON],
