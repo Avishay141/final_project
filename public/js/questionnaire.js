@@ -183,12 +183,27 @@ async function finish_questionnaire(){
   var res = await fetch('/calculate_answers', options);
   clusters = await res.json();
   print_clusters(clusters);
-  
+  insert_clusters_to_db(clusters);
 
-  // var quest_json_str = await res.text();
-  // console.log("@@@ quest_json_object after stringify: \n "+ quest_json_str);
-  // var quest_json_object = JSON.parse(quest_json_str);
+}
 
+function insert_clusters_to_db(clusters){
+  var ans_to_db_str=[];
+  for(var i =0;i<clusters.length;i++){
+    ans_to_db_str.push({cluster_name:clusters[i].name,cluster_questions: []});
+    for(var j=0;j<clusters[i].questions.length;j++){
+      if(clusters[i].questions[j].question_type==="check box")
+        ans_to_db_str[i].cluster_questions.push({question:clusters[i].questions[j].quest,ans:Array.from(clusters[i].questions[j].check_box_ans)});
+      else
+        ans_to_db_str[i].cluster_questions.push({question:clusters[i].questions[j].quest,ans:clusters[i].questions[j].user_ans});
+    }
+  }
+   var path = "Users/"+userID;
+   for(var i =0;i<clusters.length;i++){
+      db.ref(path).set({
+        clusters_test: ans_to_db_str
+   });
+ }
 }
 
 $("#logout_btn").on("click", function () {
