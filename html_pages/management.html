@@ -36,38 +36,20 @@
         <li class="nav-item active">
           <a class="nav-link" type="button" id="move_to_main">Home <span class="sr-only">(current)</span></a>
         </li>
-
-
-
       </ul>
-
-
     </div>
     <button type="button" class="btn btn-dark" id="quest_btn" style="float: right;">ערוך שאלות</button>
     <button type="button" class="btn btn-dark" id="users_btn" style="float: right;">שאלוני המשתמשים</button>
   </nav>
 
-  <!-- <div class="container">
-      
-      <div class="col-sm-8 profile">
-        <form action="/action_page.php">
-          <input type="file" id="real_upload_file_btn" name="filename" hidden="hidden">
-          <button type="button" class="btn btn-primary" id="upload_excel_btn">upload excel file</button>
-          <span id="span_text">No file was chosen</span>
-      </form>
-      <button type="submit" class="btn btn-primary" id="save_btn">save</button>
-      </div>
-    
-    
-    </div> -->
+
   <h1 id="title">עריכת שאלות</h1>
   <div class="container">
     <div class="row">
       <div class="col-sm-12 file upload_file">
-
-        <form action="" method="post" enctype="multipart/form-data">
-          <input type="file" name="testFile" id="input_file">
-          <input type="submit" name="action_type" value="upload_file">
+        <form class="form" id="upload_form">
+          <input type="file" name="inputFile" id="input_file">
+          <button type="button" id="upload_btn" class="btn btn-success" >Upload File</button>
 
         </form>
       </div>
@@ -81,11 +63,20 @@
       </div>
     </div>
 
+    <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-body" id="upload_msg">
+          Default message
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="payment-success-ok-btn" class="btn btn-info" data-dismiss="modal" >Ok</button>
+        </div>
+        </div>
+      </div>
+      </div>
+    
   </div>
-
-  <form action="" method="post" >
-    <button type="submit" class="btn btn-success" name="action_type" value="test"> test</button>
-  </form>
 
 
 

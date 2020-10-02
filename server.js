@@ -29,10 +29,6 @@ const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_CO
 
 
 
-
-
-
-
 // -----------------------------------------------------------------------------//
 
 const app = express();
@@ -52,15 +48,11 @@ app.listen(4000, function(){
 app.post("/management.html", function(req, res){
     action_type = req.body[ACTION_TYPE];
     console.log("action_type is: " + action_type);
-    if (action_type == UPLOAD_FILE){
-         upload_excel_file(req, res);
-    }
-    else if (action_type == DOWNLOAD_FILE){
-        download_excel_file(req,res);
-    }
-    else if (action_type == "test"){
-        var json_object = convert_excel_to_json();
-        res.render("questionnaire" , {the_excel_file: JSON.stringify(json_object)});
+
+    if (action_type == DOWNLOAD_FILE){
+        /* Send the user the excel file from uploads directory */
+        console.log("Sending the file input.xlsx to the user");
+        res.download(__dirname +'/uploads/input.xlsx','input.xlsx');
     }
     else{
         console.log("Unknown post request");
@@ -68,6 +60,13 @@ app.post("/management.html", function(req, res){
     }
     
     console.log("@@@@@@@ got here")
+});
+
+app.post("/upload_file", async function(req, res){
+    console.log("line 78: get a upload file request !!!!");
+    upload_excel_file(req, res);
+
+
 });
 
 app.post("/calculate_answers", async function(req, res){
@@ -91,6 +90,7 @@ app.get("/get_questions", function(req, res){
  
 });
 
+
 // Send the home page to the user
 app.get("/", function(req, res){
     res.sendFile(__dirname + "/html_pages/index.html");
@@ -105,7 +105,7 @@ function upload_excel_file(req, res){
 
     if(req.files){
        console.log(req.files);
-       var file = req.files.testFile;
+       var file = req.files.upload_file;
        var fname = file.name;
        console.log("file name: " + fname);
 
@@ -123,12 +123,6 @@ function upload_excel_file(req, res){
        })
 
    }
-}
-
-function download_excel_file(req, res){
-    /* Send the user the excel file from uploads directory */
-    console.log("Sending the file input.xlsx to the user");
-    res.download(__dirname +'/uploads/input.xlsx','input.xlsx');
 }
 
 function convert_excel_to_json(){
@@ -149,7 +143,6 @@ function write_answers_to_excel(clusters){
         for(var j = 0; j < curr_questions.length; j++){
             curr_quest = curr_questions[j];
             if(curr_quest.question_type == CHECK_BOX){
-                console.log("line 152")
                 write_check_box_answers(curr_quest, worksheet)
             }
             else{
@@ -169,23 +162,18 @@ function write_answers_to_excel(clusters){
 
 function write_check_box_answers(quest, worksheet){
     var check_box_ans_arr = Array.from(quest.check_box_ans);
-    console.log("line 172: quest.check_box_ans: " + quest.check_box_ans);
-    
     for(var i =0; i < check_box_ans_arr.length; i++){
-        console.log("line 175: quest.line: " + quest.line);
         var user_ans_col = get_user_ans_col(check_box_ans_arr[i], quest.line, worksheet)
         if(user_ans_col == FAILURE)
-            console.log("line 178: Failed to write checkbox answers to excel file")
+            console.log("Failed to write checkbox answers to excel file")
         else{
             var user_ans_cell =  xlsx.utils.encode_cell({r:quest.line, c:user_ans_col});
-            console.log("line 181: writing check box ans")
             worksheet[user_ans_cell].v = String(check_box_ans_arr[i]).trim();
         }
     }
 }
 
 function get_user_ans_col(user_ans, line_num, worksheet){
-    console.log("line 188: entered get_user_ans_col")
     for(var i = FIRST_ANS_COL_NUM; i <= LAST_ANS_COL_NUM ; i++){
         var ans_cell = xlsx.utils.encode_cell({r:line_num, c:i})
         if(worksheet[ans_cell].v.trim() == user_ans.trim())
