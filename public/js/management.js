@@ -2,7 +2,7 @@
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
 
-     window.location = "index.html";
+     window.location = "../html_pages/index.html";
   } else {
     userID = user.uid;
     console.log("this line shoud be executed once for each login");
@@ -22,7 +22,7 @@ $("#logout_btn").on("click", function () {
 
 
 $("#move_to_main").on("click", function () {
-  window.location = "questionnaire.html?uid="+userID;
+  window.location = "../html_pages/questionnaire.html?uid="+userID;
 });
 
 

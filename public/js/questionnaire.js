@@ -157,7 +157,7 @@ function get_user_answer(question_number) {
 firebase.auth().onAuthStateChanged(function (user) {
   if (!user) {
 
-    window.location = "index.html";
+    window.location = "../html_pages/index.html";
   } else {
     userID = user.uid;
     console.log("this line shoud be executed once for each login");
@@ -215,7 +215,7 @@ $("#logout_btn").on("click", function () {
 
 
 $("#manage_btn").on("click", function () {
-  window.location = "/management.html?uid=" + userID;
+  window.location = "../html_pages/management.html?uid=" + userID;
 });
 
 $("#start_quest_btn").on("click", function () { 

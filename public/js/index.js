@@ -18,7 +18,7 @@ $("#login_btn").on("click",function(){
 
 $("#sign_up_btn").on("click",function(){
 
-     window.location = "signup.html";
+     window.location = "../html_pages/signup.html";
 
   });
 
@@ -42,7 +42,7 @@ $("#forgot_btn").on("click",function(){
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     console.log("!!!!!!!!!: " + user.uid)
-    window.location = "questionnaire.html?uid="+user.uid;
+    window.location = "../html_pages/questionnaire.html?uid="+user.uid;
   } else {
     console.log("User hasn't logged in yet");
   }

@@ -43,7 +43,7 @@ var user_created_successfully = false;
 				console.log("user created successfuly");
 				document.getElementById("success_msg").innerHTML = "user created successfuly";
 				
-				window.location = "questionnaire.html?uid="+user.uid;
+				window.location = "../html_pages/questionnaire.html?uid="+user.uid;
 			}
 
 

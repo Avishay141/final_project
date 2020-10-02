@@ -10,7 +10,7 @@ const FormulaParser = require('hot-formula-parser').Parser;
 // Const Variables
 const FAILURE = -1;
 const SUCCESS = 0;
-const EXCEL_FILE_PATH = __dirname +"/uploads/input.xlsx"
+const EXCEL_FILE_PATH = __dirname +"/public/uploads/input.xlsx"
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const UPLOAD_FILE = "upload_file";
@@ -36,7 +36,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(upload());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(express.static('html_pages'));
 app.use(express.json());
 
 
@@ -45,14 +44,14 @@ app.listen(4000, function(){
 });
 
 // Handling post request
-app.post("/management.html", function(req, res){
+app.post("/html_pages/management.html", function(req, res){
     action_type = req.body[ACTION_TYPE];
     console.log("action_type is: " + action_type);
 
     if (action_type == DOWNLOAD_FILE){
         /* Send the user the excel file from uploads directory */
         console.log("Sending the file input.xlsx to the user");
-        res.download(__dirname +'/uploads/input.xlsx','input.xlsx');
+        res.download(__dirname +'/public/uploads/input.xlsx','input.xlsx');
     }
     else{
         console.log("Unknown post request");
@@ -93,7 +92,7 @@ app.get("/get_questions", function(req, res){
 
 // Send the home page to the user
 app.get("/", function(req, res){
-    res.sendFile(__dirname + "/html_pages/index.html");
+    res.sendFile(__dirname + "/public/html_pages/index.html");
 });
 
 // ------------------- Service Functions -------------------- 
@@ -109,7 +108,7 @@ function upload_excel_file(req, res){
        var fname = file.name;
        console.log("file name: " + fname);
 
-       file.mv('./uploads/'+ fname , function(err){
+       file.mv(__dirname + "/public/uploads/" + fname , function(err){
            if(err){
             console.log("Failed to upload to file: " + fname);
                 res.send(err);
@@ -135,7 +134,7 @@ function convert_excel_to_json(){
 }
 
 function write_answers_to_excel(clusters){
-    var execl_file =  xlsx.readFile("./uploads/input.xlsx");
+    var execl_file =  xlsx.readFile(__dirname + "/public/uploads/input.xlsx");
     var worksheet = execl_file.Sheets[execl_file.SheetNames[0]];
 
     for(var i = 0; i < clusters.length; i++){
@@ -154,7 +153,7 @@ function write_answers_to_excel(clusters){
 
     //var random_num = String(Math.floor(Math.random() * 10000000));
     var random_num = "1";
-    var res_file_path = "./tmp/res"+random_num+".xlsx";
+    var res_file_path = __dirname + "/public/tmp/res"+random_num+".xlsx";
     xlsx.writeFile(execl_file, res_file_path);
     console.log("Finish writing answers to excel");
     return res_file_path;
