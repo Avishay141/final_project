@@ -59,11 +59,14 @@ function save_cluster_answers(){
   for(var i =0; i < quest_arr.length; i++){
 
     var tmp_quest = quest_arr[i];
-    if (tmp_quest.question_type == CHECK_BOX)
-      continue;
-    // the user answers of the check_box questions are already updated. every time the user check or uncheck a box we update.
-
-    if (tmp_quest.question_type == SLIDER){
+    if (tmp_quest.question_type == CHECK_BOX){
+      tmp_quest.check_box_ans = Array.from(tmp_quest.check_box_ans);
+       /* the user answers of the check_box questions are already updated.
+      every time the user check or uncheck a box we update. we only need to convert the Set to an array
+      because when converting Set to json the elements are lost
+    */
+    }
+    else if (tmp_quest.question_type == SLIDER){
       var ans = document.getElementById(RANGE_SLIDER+tmp_quest.line).value;
       tmp_quest.user_ans = ans;
       console.log(tmp_quest.line +" ,ans: " + ans);
@@ -193,14 +196,14 @@ function insert_clusters_to_db(clusters){
     ans_to_db_str.push({cluster_name:clusters[i].name,cluster_questions: []});
     for(var j=0;j<clusters[i].questions.length;j++){
       if(clusters[i].questions[j].question_type==="check box")
-        ans_to_db_str[i].cluster_questions.push({question:clusters[i].questions[j].quest,ans:Array.from(clusters[i].questions[j].check_box_ans)});
+        ans_to_db_str[i].cluster_questions.push({question:clusters[i].questions[j].quest,ans:clusters[i].questions[j].check_box_ans});
       else
         ans_to_db_str[i].cluster_questions.push({question:clusters[i].questions[j].quest,ans:clusters[i].questions[j].user_ans});
     }
   }
    var path = "Users/"+userID;
    for(var i =0;i<clusters.length;i++){
-      db.ref(path).set({
+      db.ref(path).update({
         clusters_test: ans_to_db_str
    });
  }
@@ -461,8 +464,12 @@ function print_clusters(clusters_arr){
   for(var i = 0; i < clusters_arr.length; i++){
     var curr_questions = clusters_arr[i].questions;
     for(var j = 0; j < curr_questions.length; j++){
-        q = curr_questions[j];
-        console.log("question " +q.line + ", user_ans: " + q.user_ans +", grade: " + q.grade);
+        var q = curr_questions[j];
+        var user_ans = q.user_ans;
+        if(q.question_type == CHECK_BOX)
+           user_ans = q.check_box_ans;
+
+        console.log("question " +q.line + ", user_ans: " + user_ans +", grade: " + q.grade);
   
     }
 }

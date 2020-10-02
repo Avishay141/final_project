@@ -8,8 +8,8 @@ const ExcelJS = require('exceljs');
 const FormulaParser = require('hot-formula-parser').Parser;
 
 // Const Variables
-const RC_SUCCESS = 0;
-const RC_FAILED = 1;
+const FAILURE = -1;
+const SUCCESS = 0;
 const EXCEL_FILE_PATH = __dirname +"/uploads/input.xlsx"
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
@@ -18,8 +18,20 @@ const GET_QUEST = "get_quest";
 const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
 const CHECK_BOX = "check box";
-const USER_ANSWER_COL = 0; // in sheet B
-const FINAL_CALC_COL = 14;
+const FINAL_CALC_COL_NUM = 13;
+
+const FIRST_ANS_COL_NUM = 3;
+const LAST_ANS_COL_NUM = 12;
+
+const FIRST_USER_ANS_COL_NUM = 18;
+const LAST_USER_ANS_COL_NUM = 27;
+const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_COL_NUM;
+
+
+
+
+
+
 
 // -----------------------------------------------------------------------------//
 
@@ -66,7 +78,7 @@ app.post("/calculate_answers", async function(req, res){
     var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
     var updated_clusters_json_object = JSON.stringify(updated_clusters);
     console.log("this is after calling read_final_grade_and_update_clusters()");
-    console.log(updated_clusters_json_object);
+    //console.log(updated_clusters_json_object);
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
@@ -101,7 +113,7 @@ function upload_excel_file(req, res){
            if(err){
             console.log("Failed to upload to file: " + fname);
                 res.send(err);
-                return RC_FAILED;
+                return FAILURE;
            }
             else{
                 console.log("file uploaded successfully");
@@ -137,10 +149,11 @@ function write_answers_to_excel(clusters){
         for(var j = 0; j < curr_questions.length; j++){
             curr_quest = curr_questions[j];
             if(curr_quest.question_type == CHECK_BOX){
-                console.log("this is a check box question");
+                console.log("line 152")
+                write_check_box_answers(curr_quest, worksheet)
             }
             else{
-                var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:USER_ANSWER_COL});
+                var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FIRST_USER_ANS_COL_NUM});
                 worksheet[user_ans_cell].v = String(curr_quest.user_ans).trim();
             }
         }
@@ -152,6 +165,36 @@ function write_answers_to_excel(clusters){
     xlsx.writeFile(execl_file, res_file_path);
     console.log("Finish writing answers to excel");
     return res_file_path;
+}
+
+function write_check_box_answers(quest, worksheet){
+    var check_box_ans_arr = Array.from(quest.check_box_ans);
+    console.log("line 172: quest.check_box_ans: " + quest.check_box_ans);
+    
+    for(var i =0; i < check_box_ans_arr.length; i++){
+        console.log("line 175: quest.line: " + quest.line);
+        var user_ans_col = get_user_ans_col(check_box_ans_arr[i], quest.line, worksheet)
+        if(user_ans_col == FAILURE)
+            console.log("line 178: Failed to write checkbox answers to excel file")
+        else{
+            var user_ans_cell =  xlsx.utils.encode_cell({r:quest.line, c:user_ans_col});
+            console.log("line 181: writing check box ans")
+            worksheet[user_ans_cell].v = String(check_box_ans_arr[i]).trim();
+        }
+    }
+}
+
+function get_user_ans_col(user_ans, line_num, worksheet){
+    console.log("line 188: entered get_user_ans_col")
+    for(var i = FIRST_ANS_COL_NUM; i <= LAST_ANS_COL_NUM ; i++){
+        var ans_cell = xlsx.utils.encode_cell({r:line_num, c:i})
+        if(worksheet[ans_cell].v.trim() == user_ans.trim())
+            return i + DIFF_OF_ANS_AND_USER_ANS_COL_INDEX;
+    }
+
+    console.log("line 195: Failed to find the right user_ans column for answer: " + user_ans);
+    return FAILURE
+    
 }
 
 const parser = new FormulaParser();
@@ -176,14 +219,8 @@ const parser = new FormulaParser();
             var curr_questions = clusters[i].questions;
             for(var j = 0; j < curr_questions.length; j++){
                 curr_quest = curr_questions[j];
-                if(curr_quest.question_type == CHECK_BOX){
-                    console.log("this is a check box question 2");
-                }
-                else{
-                    var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL});
-                    curr_quest.grade = getCellResult(worksheet, final_calc_cell);
-    
-                }
+                var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL_NUM});
+                curr_quest.grade = getCellResult(worksheet, final_calc_cell);
             }
         }
       
