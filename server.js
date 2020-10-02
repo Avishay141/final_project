@@ -38,10 +38,10 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json());
 
-
-app.listen(4000, function(){
-    console.log("server started on port 4000 @@@@");
+app.listen(process.env.PORT ||3000, function(){
+    console.log("Server is running on port 3000!!!");
 });
+
 
 // Handling post request
 app.post("/html_pages/management.html", function(req, res){
