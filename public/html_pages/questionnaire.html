@@ -51,16 +51,14 @@
 
 
   <div class="container">
-    <div class="row">
-      <div class="col-sm-3"></div>
-      <div class="col-sm-6">
-        <!-- <form action="" method="post" id="get_questions">
-          <button type="submit" class="btn btn-warning" name="action_type" value="get_quest" id="start_quest_btn">התחל שאלון </button>
-        </form> -->
-        <div class="col-sm-3"> <button type="button" id="start_quest_btn" class="btn btn-warning">התחל</button></div>
+    <div class="row top">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <button type="button" id="start_quest_btn"> התחל שאלון</button>
+        <p id="finish_msg" hidden></p>
       </div>
 
-      <div class="col-sm-3"></div>
+      <div class="col-sm-2"></div>
     </div>
 
     <div class="row">
@@ -77,9 +75,11 @@
             </ul>
 
 
-            <div class="next_button">
-              <button type="button" id="nextAndSumbitBTN" class="btn btn-warning">הבא</button>
+            <div class="next_prev_buttons">
+              <button type="button" id="prev_btn" class="btn btn-warning">הקודם</button>
+              <button type="button" id="next_btn" class="btn btn-warning">הבא</button>
             </div>
+            <p id="fill_question_msg" hidden> חובה לענות על כל השאלות</p>
           </div>
         </div>
       </div>

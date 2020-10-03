@@ -27,132 +27,17 @@ const CHECK_BOX = "check box";
 const RANGE_VLAUE = 'range_vlaue';
 const RANGE_SLIDER = 'range_Slider';
 const NA = 'NA';
+const RADIO_BTN = 'radio_btn';
+const BOX_ANS = 'box_ans';
 
 /* ----- initialize variables --------- */
 
-const NON = -1;
+const NON = 'NON';
 var question=QUESTION_M;
 var db = firebase.database();
 var user_gender; 
 var userID = get_userID_from_url();
 db.ref("Users/"+userID).on("value", get_gender);
-
-$("h1").css("color", "white");
-
-/* listener for "Next" button */
-$(".next_button").on("click", function () {
-
-  save_cluster_answers(current_cluster_index);
-  current_cluster_index++;
-    // chcking that we got to the end of the questionnaire - end of the cluster array (clusters)
-    if(current_cluster_index > clusters.length - 1)
-    return finish_questionnaire();
-
-  show_cluster(current_cluster_index);
-
-});
-
-
-function save_cluster_answers(){
-  var curr_cluster = clusters[current_cluster_index];
-  var quest_arr = curr_cluster.questions;
-  for(var i =0; i < quest_arr.length; i++){
-
-    var tmp_quest = quest_arr[i];
-    if (tmp_quest.question_type == CHECK_BOX){
-      tmp_quest.check_box_ans = Array.from(tmp_quest.check_box_ans);
-       /* the user answers of the check_box questions are already updated.
-      every time the user check or uncheck a box we update. we only need to convert the Set to an array
-      because when converting Set to json the elements are lost
-    */
-    }
-    else if (tmp_quest.question_type == SLIDER){
-      var ans = document.getElementById(RANGE_SLIDER+tmp_quest.line).value;
-      tmp_quest.user_ans = ans;
-      console.log(tmp_quest.line +" ,ans: " + ans);
-    }
-    else{
-      var ans = document.querySelector('input[name='+AMERICAN+tmp_quest.line+']:checked').value;
-      tmp_quest.user_ans = ans;
-      console.log(tmp_quest.line +" ,ans: " + ans);
-    }
-  
-
-  }
-
-}
-
-function got_questions_data(data) {
-  questions_list = [];
-
-  var questions_obj = data.val();
-  var keys = Object.keys(questions_obj);
-
-
-  for (var i = 0; i < keys.length; i++) {
-    num_of_questions = keys.length - 1;
-    if (keys[i] != 'next_id') {
-      k = keys[i];
-      add_question_to_list(questions_obj[k]);
-    }
-  }
-  update_question_card();
-}
-
-function add_question_to_list(quest_obj) {
-  new_quest = {
-    id: quest_obj.id,
-    question: quest_obj.question,
-    answers: quest_obj.answers
-  }
-
-  questions_list.push(new_quest);
-}
-
-function update_question_card() {
-
-  if (num_of_questions - 1 == current_question_num) {
-    document.getElementById("nextAndSumbitBTN").innerHTML = "הזן תוצאות";
-  }
-  if (num_of_questions == current_question_num) {
-    window.alert("Thanks for your help");
-    current_question_num = 0;
-  }
-  else {
-    quest = questions_list[current_question_num];
-    $(".card .card-title").text("Question " + (current_question_num + 1));
-    $(".card .card-text").text(quest.question);
-
-    for (var i = 1; i < 6; i++) {
-      document.getElementById("rd" + i + "_id").hidden = true;
-
-    }
-    var max_num_of_answers = quest.answers.length;
-
-    for (var i = 0; i < max_num_of_answers; i++) {
-      $("#rd_txt" + (i + 1)).text(quest.answers[i]);
-      document.getElementById("rd" + (i + 1) + "_id").hidden = false;
-    }
-  }
-}
-
-
-function error_questions_data(err) {
-  console.log("enter error_data");
-  console.log(err.val());
-}
-
-
-function get_user_answer(question_number) {
-  for (var i = 1; i <= MAX_NUM_OF_ANSWERS; i++) {
-
-    if (document.getElementById('customRadio' + i).checked)
-      return document.getElementById('rd_txt' + i).innerText;
-
-  }
-  return NON;
-}
-
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (!user) {
@@ -171,13 +56,74 @@ function get_userID_from_url() {
   return res;
 }
 
+/* listener for "Next" button */
+$("#next_btn").on("click", function () {
+  if(!is_all_question_are_filled()){
+    document.getElementById("fill_question_msg").hidden = false;
+    return;
+  }
+  document.getElementById("fill_question_msg").hidden = true;
+
+  save_cluster_answers();
+  current_cluster_index++;
+    // chcking that we got to the end of the questionnaire - end of the cluster array (clusters)
+    if(current_cluster_index > clusters.length - 1)
+    return finish_questionnaire();
+
+  show_cluster();
+
+});
+
+$("#prev_btn").on("click", function () {
+  if(!is_all_question_are_filled()){
+    document.getElementById("fill_question_msg").hidden = false;
+    return;
+  }
+  document.getElementById("fill_question_msg").hidden = true;
+
+  if(current_cluster_index == 0)
+    return;
+
+  save_cluster_answers();
+  current_cluster_index--;
+  show_cluster();
+
+});
+
+
+function save_cluster_answers(){
+  var curr_cluster = clusters[current_cluster_index];
+  var quest_arr = curr_cluster.questions;
+  for(var i =0; i < quest_arr.length; i++){
+
+    var tmp_quest = quest_arr[i];
+    if (tmp_quest.question_type == CHECK_BOX){
+      tmp_quest.check_box_ans = Array.from(tmp_quest.check_box_ans);
+       /* the user answers of the check_box questions are already updated.
+      every time the user check or uncheck a box we update. we only need to convert the Set to an array
+      because when converting Set to json the elements are lost
+    */
+    }
+    else if (tmp_quest.question_type == SLIDER){
+      var ans = document.getElementById(get_answer_element_id(tmp_quest)).value;
+      tmp_quest.user_ans = ans;
+      console.log(tmp_quest.line +" ,ans: " + ans);
+    }
+    else{
+      var ans = document.querySelector('input[name='+AMERICAN+tmp_quest.line+']:checked').value;
+      tmp_quest.user_ans = ans;
+    }
+  
+
+  }
+
+}
+
+
 async function finish_questionnaire(){
-  // todo: implement
-  console.log("@@@ finish questionnaire");
   const options = {
     method: 'POST',
     headers: {
-       //'Content-Type': 'text/plain'
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(clusters)
@@ -185,12 +131,24 @@ async function finish_questionnaire(){
   };
   var res = await fetch('/calculate_answers', options);
   clusters = await res.json();
-  print_clusters(clusters);
-  insert_clusters_to_db(clusters);
+  replace_null_grades_with_zero()
+  print_clusters();
+  var final_grade = calculate_final_grade()
+  update_html_finish_msg(final_grade)
+  insert_clusters_to_db();
+
+  console.log("@@@ finish questionnaire, your grade: " + final_grade);
 
 }
 
-function insert_clusters_to_db(clusters){
+function update_html_finish_msg(final_grade){
+  var finish_msg_elem = document.getElementById("finish_msg");
+  finish_msg_elem.innerHTML = 'סיימת את השאלון בהצלחה!  ציון: ' + final_grade;
+  finish_msg_elem.hidden = false;
+  document.getElementById("card_questions").hidden = true;
+}
+
+function insert_clusters_to_db(){
   var ans_to_db_str=[];
   for(var i =0;i<clusters.length;i++){
     ans_to_db_str.push({cluster_name:clusters[i].name,cluster_questions: []});
@@ -207,6 +165,22 @@ function insert_clusters_to_db(clusters){
         clusters_test: ans_to_db_str
    });
  }
+}
+
+function is_all_question_are_filled(){
+  var curr_cluster = clusters[current_cluster_index];
+  var quest_arr = curr_cluster.questions;
+  for(var i =0; i < quest_arr.length; i++){
+    var quest = quest_arr[i];
+    if(quest.question_type != AMERICAN)
+      continue;
+
+    var radio_btn_ans_elem = document.querySelector('input[name='+AMERICAN+quest.line+']:checked');
+    if(!radio_btn_ans_elem)
+      return false;
+
+  }
+  return true;
 }
 
 $("#logout_btn").on("click", function () {
@@ -227,7 +201,7 @@ async function run_questionnaire(){
   var quest_json_object = await get_questions_from_server();
   load_questions_from_excel_json(quest_json_object);
   hide_and_show_relevant_html_elements();
-  show_cluster(0); // calling show_cluster with the first cluster
+  show_cluster();
 }
 
 async function get_questions_from_server(){
@@ -250,18 +224,18 @@ function hide_and_show_relevant_html_elements(){
   document.getElementById("card_questions").hidden = false;
 }
 
-function add_answers_to_db() {
+// function add_answers_to_db() {
 
-  db.ref("Users/" + userID).update({
-    answers_ai: user_answers_ai,
-    answers: user_answers
-  });
-  console.log(user_answers + "  " + user_answers_ai);
-  user_answers = [];
-  user_answers_ai = {};
-  document.getElementById("nextAndSumbitBTN").innerHTML = "הבא";
+//   db.ref("Users/" + userID).update({
+//     answers_ai: user_answers_ai,
+//     answers: user_answers
+//   });
+//   console.log(user_answers + "  " + user_answers_ai);
+//   user_answers = [];
+//   user_answers_ai = {};
+//   document.getElementById("nextAndSumbitBTN").innerHTML = "הבא";
 
-}
+// }
 
 
 /* ---------- Functions that create the question objects from Json object ------- */
@@ -317,8 +291,8 @@ function create_question(i, excel_json_obj) {
     quest: curr_row[question],
     cluster: curr_row[CLUSTER],
     answers: valid_answers,
-    user_ans: curr_row[USER_ANS1],
-    question_type: curr_row[QUEST_TYPE],
+    user_ans: NON,
+    question_type: curr_row[QUEST_TYPE].trim(),
     is_depended: curr_row[IS_DEPENDED],
     depended_on: curr_row[DEPENDED_ON],
     check_box_ans: new Set(),
@@ -348,13 +322,11 @@ function get_valid_answers(curr_row){
 
 /* ---------- Functions that create the visual html questions ------- */
 
-function show_cluster(cluster_index){
+function show_cluster(){
   /* iterating over the questions in the cluster  and putting the auestions in the screen */
-
-
   console.log("entered show_cluster");
   $(".cluster").empty();
-  var current_cluster = clusters[cluster_index];
+  var current_cluster = clusters[current_cluster_index];
   document.getElementById("cluster_name_title").innerHTML = current_cluster.name;
   var cluster_size = current_cluster.questions.length;
 
@@ -364,7 +336,38 @@ function show_cluster(cluster_index){
       $(".cluster").append(curr_quest_html);
       if(quest_obj.question_type == SLIDER)
             set_slider(quest_obj);
+
+      // Converting check_box_ans to Set(), every time we save cluster we convert it back to Array
+      if(quest_obj.question_type == CHECK_BOX)
+        quest_obj.check_box_ans = new Set(quest_obj.check_box_ans)
+       
+      set_user_answers_in_html(quest_obj);
   }
+}
+
+function set_user_answers_in_html(quest){
+    if(quest.question_type == CHECK_BOX){
+      if(quest.check_box_ans.size == 0)
+          return;
+      var arr = Array.from(quest.check_box_ans);
+      for(var i =0; i < arr.length; i++){
+        var elem_id = get_answer_element_id(quest, arr[i]);
+        document.getElementById(elem_id).checked = true;
+      }
+      return;
+    }
+
+    if(quest.user_ans == NON)
+      return;
+    
+    var elem =  document.getElementById(get_answer_element_id(quest, quest.user_ans));
+
+    if(quest.question_type == AMERICAN)
+      elem.checked = true;
+    
+    else
+      elem.value = quest.user_ans;
+    
 }
 
 function get_question_html(quest_obj){
@@ -385,7 +388,7 @@ function create_american_quest(q){
   var quest = '<li>';
   quest += '<h6>' +q.quest+ '</h6>';
   for(var i =0; i < q.answers.length; i++){
-      quest += '<li><label><input type="radio" name="'+AMERICAN+q.line+'" value="'+q.answers[i]+'"><span>  '+q.answers[i]+'</span></label></li>';
+      quest += '<li><label><input type="radio" name="'+AMERICAN+q.line+'" value="'+q.answers[i]+'" id="'+get_answer_element_id(q, q.answers[i])+'"><span>  '+q.answers[i]+'</span></label></li>';
   }
   quest +='</li>';
 
@@ -400,7 +403,7 @@ function create_slider_quest(q){
   quest += '<span class="font-weight-bold indigo-text mr-2 mt-1">0</span>';
   quest += '<div class="range-value" id="'+RANGE_VLAUE+q.line+'"> </div>';
   quest += '<form>';
-  quest +=  '<input class="rangeSlider" id="'+RANGE_SLIDER+q.line+'" type="range" min="0" max="100" value="0" step="0.1" />';
+  quest +=  '<input class="rangeSlider" id="'+get_answer_element_id(q)+'" type="range" min="0" max="100" value="0" step="0.1" />';
   quest += '</form>'
   quest +=  '<span class="font-weight-bold blue-text mr-2 mt-1">100</span>';
   quest += '</div>';
@@ -417,10 +420,8 @@ function create_check_box_quest(q){
 
   for(var i =0; i < q.answers.length; i++){
       var ans = q.answers[i];
-      console.log("ans type: " + typeof(ans) + " , val: " + ans);
-      quest += '<input type="checkbox" name="'+q.line+'" value="'+q.answers[i]+'" onclick="return update_checkbox_answers('+q.line+',\''+q.answers[i]+'\');"> '+q.answers[i]+'<br>';
-      // quest += '<input type="checkbox" name="'+q.line+'" value="'+q.answers[i]+'" onclick="return test(\''+ans+'\');"> '+q.answers[i]+'<br>';
-
+      //console.log("ans type: " + typeof(ans) + " , val: " + ans);
+      quest += '<input type="checkbox" name="'+q.line+'" value="'+q.answers[i]+'" id="'+get_answer_element_id(q, q.answers[i])+'" onclick="return update_checkbox_answers('+q.line+',\''+q.answers[i]+'\');"> '+q.answers[i]+'<br>';
     }
 
   quest +=' </fieldset>';
@@ -456,13 +457,37 @@ function set_slider(quest){
     rangeV.innerHTML = `<span>${range.value}</span>`;
     rangeV.style.right = `calc(${newValue}% + (${newPosition}px))`;
   };
-document.addEventListener("DOMContentLoaded", setValue);
-range.addEventListener('input', setValue);
+  document.addEventListener("DOMContentLoaded", setValue);
+  range.addEventListener('input', setValue);
 }
 
-function print_clusters(clusters_arr){
-  for(var i = 0; i < clusters_arr.length; i++){
-    var curr_questions = clusters_arr[i].questions;
+function get_answer_element_id(quest, ans=NON){
+  if(quest.question_type == AMERICAN)
+     return String(quest.line+RADIO_BTN+ans).trim();
+  
+  if(quest.question_type == CHECK_BOX)
+    return String(quest.line+BOX_ANS+ans).trim();
+
+  if(quest.question_type == SLIDER)
+    return String(RANGE_SLIDER+quest.line).trim();
+
+  console.log('ERROR: Unknown question type: ' + quest.question_type);
+}
+
+function replace_null_grades_with_zero(){
+  for(var i = 0; i < clusters.length; i++){
+    var curr_questions = clusters[i].questions;
+    for(var j = 0; j < curr_questions.length; j++){
+        var quest = curr_questions[j];
+        if(!quest.grade)
+        quest.grade =0;
+    }
+  }
+
+}
+function print_clusters(){
+  for(var i = 0; i < clusters.length; i++){
+    var curr_questions = clusters[i].questions;
     for(var j = 0; j < curr_questions.length; j++){
         var q = curr_questions[j];
         var user_ans = q.user_ans;
@@ -472,7 +497,16 @@ function print_clusters(clusters_arr){
         console.log("question " +q.line + ", user_ans: " + user_ans +", grade: " + q.grade);
   
     }
+  }
 }
 
+function calculate_final_grade(){
+  var final_grade = 0;
+  for(var i = 0; i < clusters.length; i++){
+    var curr_questions = clusters[i].questions;
+    for(var j = 0; j < curr_questions.length; j++)
+        final_grade += Number(curr_questions[j].grade);
+  }
+  return final_grade;
 }
 

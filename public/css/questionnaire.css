@@ -1,6 +1,21 @@
-#start_quest_btn{
-  margin: 10%;
+
+#start_quest_btn {
+  background-color: #256e39; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+ margin: auto;
 }
+
+.container{
+  margin: 10%;
+  text-align: center;
+}
+
 
 .card{
   max-width: 100%;
@@ -130,4 +145,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   left: 50%;
   margin-left: -5px;
   margin-top: -1px;
+}
+
+#fill_question_msg{
+  color: red;
 }

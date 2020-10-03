@@ -98,9 +98,9 @@ app.get("/", function(req, res){
 // ------------------- Service Functions -------------------- 
 
 function upload_excel_file(req, res){
-    /*upload excel file the uploads folder
-    return: RC_SUCCESS if the file was uploaded successfully, else RC_FAILED
-    return_typ: int */
+    /*upload excel file to uploads folder
+    return: success message if the file was uploaded successfully, else error message
+    */
 
     if(req.files){
        console.log(req.files);
@@ -112,7 +112,6 @@ function upload_excel_file(req, res){
            if(err){
             console.log("Failed to upload to file: " + fname);
                 res.send(err);
-                return FAILURE;
            }
             else{
                 console.log("file uploaded successfully");
