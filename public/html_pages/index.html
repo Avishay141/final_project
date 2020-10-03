@@ -1,63 +1,186 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-      <link rel="stylesheet"  href="/css/index.css">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!------ Include the above in your HEAD tag ---------->
 
 
-  </head>
-  <body>
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
-<!-- TODO: Add SDKs for Firebase products that you want to use
+<link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/index.css">
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 mx-auto">
+                <div id="first">
+                    <div class="myform form ">
+                        <div class="logo mb-3">
+                            <div class="col-md-12 text-center">
+                                <h1>Login</h1>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="email" class="form-control" id="email"
+                                aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Password</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                aria-describedby="emailHelp" placeholder="Enter Password">
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button type="submit" id="login_btn"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
+                        </div>
+                        <div class="col-md-12 ">
+                            <div class="login-or">
+                                <hr class="hr-or">
+                                <span class="span-or">or</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-center">Don't have account? <a href="#" id="signup">Sign up here</a></p>
+                            <div class="form-group" data-toggle="modal" data-target="#modalConfirmDelete">
+                                <p class="text-center">Forgot your password? <a href="#" id="forgot_btn">Press here</a></p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div id="second">
+                    <div class="myform form ">
+                        <div class="logo mb-3">
+                            <div class="col-md-12 text-center">
+                                <h1>Signup</h1>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Full Name</label>
+                            <input type="text" name="firstname" class="form-control" id="user_name"
+                                aria-describedby="emailHelp" placeholder="Enter Fullname">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="email" class="form-control" id="user_email"
+                                aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Password</label>
+                            <input type="password" name="password" id="user_password1" class="form-control"
+                                aria-describedby="emailHelp" placeholder="Enter Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Password Verify</label>
+                            <input type="password" name="password_verify" id="user_password2" class="form-control"
+                                aria-describedby="emailHelp" placeholder="Enter Password Again">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="userGenderRadios" id="smallRadio"
+                                value="Female" checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Female
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="userGenderRadios" id="mediumRadio"
+                                value="Male">
+                            <label class="form-check-label" for="exampleRadios2">
+                                Male
+                            </label>
+                        </div>
+                        <div class="col-md-12 text-center mb-3">
+                            <button type="submit" id="sbmt"
+                                class=" btn btn-block mybtn btn-primary tx-tfm">Submit</button>
+                        </div>
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <p class="text-center"><a href="#" id="signin">Already have an account?</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal: modalConfirmDelete-->
+    <div class="modal fade" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <!--Content-->
+            <div class="modal-content text-center">
+                <!--Header-->
+                <div class="modal-header d-flex justify-content-center">
+                    <p class="heading">What is your email?</p>
+                </div>
+               
+
+                <div class="mb-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="email" name="recover_email" class="form-control" id="user_recovery_email" placeholder="Enter email">
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <!--Footer-->
+                <div class="modal-footer flex-center">
+                    <a href="" id="recover_password_btn" class="btn  btn-outline-success">Recover my password</a>
+                    <a type="button" class="btn  btn-success waves-effect" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!--Modal: modalConfirmDelete-->
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+
+
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
 
-     <script>
-      // Your web app's Firebase configuration
-      var firebaseConfig = {
-        apiKey: "AIzaSyAG3tKSzvgH1q_eN0CCSYEziQqalb55WT8",
-        authDomain: "nutrition-fbeec.firebaseapp.com",
-        databaseURL: "https://nutrition-fbeec.firebaseio.com",
-        projectId: "nutrition-fbeec",
-        storageBucket: "nutrition-fbeec.appspot.com",
-        messagingSenderId: "100085486574",
-        appId: "1:100085486574:web:205d06fdd7dad9d28974ff",
-        measurementId: "G-FTFZ8X849D"
-      };
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAG3tKSzvgH1q_eN0CCSYEziQqalb55WT8",
+            authDomain: "nutrition-fbeec.firebaseapp.com",
+            databaseURL: "https://nutrition-fbeec.firebaseio.com",
+            projectId: "nutrition-fbeec",
+            storageBucket: "nutrition-fbeec.appspot.com",
+            messagingSenderId: "100085486574",
+            appId: "1:100085486574:web:205d06fdd7dad9d28974ff",
+            measurementId: "G-FTFZ8X849D"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
     </script>
 
-
-<h1 class="main_title">ברוכים הבאים</h1>
-<div class="login_form">
-  <h3 class="login_title">Login</h3>
-  <div class="form-group">
-    <input type="email" class="form-control email" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-  </div>
-  <div class="form-group">
-
-    <input type="password" class="form-control password" id="password" placeholder="Password">
-  </div>
-
- <button type="button" class="btn btn-primary" id="login_btn">Login</button>
-<button type="button" class="btn btn-primary" id="sign_up_btn">Sign up</button>
-  <button type="button" class="btn btn-primary" id="forgot_btn">forgot password</button>
-  <h5 class="error_msg" id="error_msg_id"></h5>
-</div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="/js/index.js" charset="utf-8"></script>
-  </body>
+
+
+
+</body>
+
 </html>
