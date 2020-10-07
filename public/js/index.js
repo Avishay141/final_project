@@ -26,29 +26,27 @@ firebase.auth().onAuthStateChanged(function (user) {
 $("#login_btn").on("click", function () {
     var email = $("#email").val();
     var password = $("#password").val();
-    // var error_msg = document.getElementById("error_msg_id");
     const auth = firebase.auth();
 
-    var res = auth.signInWithEmailAndPassword(email, password);
-    res.catch(e => error_msg.innerHTML = e.message);
+    var res = auth.signInWithEmailAndPassword(email, password).catch(function (error) {
+        document.getElementById("error_message").innerHTML = "Incorrect Email/Password";
+        $('#modalInputError').modal('show');
+    });
+
+
 
 });
 
 $("#sbmt").on("click", function () {
 
-    console.log("start of signup");
     var email = $("#user_email").val();
     var password = $("#user_password1").val();
     var verify = $("#user_password2").val();
     var name = $("#user_name").val();
     var gender = $('input[name=userGenderRadios]:checked').val();
-    if (verify != password) {
-        alert("wrong password verification");
-        return;
-    }
-
     var user_created_successfully = false;
-    console.log("start of signup22222");
+    if(validate_signup_inputs(name,email, password, verify)){
+
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
         //Registration is successful
         user_created_successfully = true;
@@ -57,8 +55,6 @@ $("#sbmt").on("click", function () {
         var userID = user.uid;
 
         var path = "Users/" + userID;
-        console.log("db path: " + path);
-        //var db = firebase.database().ref();
         db.child(path).set({
             userEmail: email,
             name: name,
@@ -70,21 +66,47 @@ $("#sbmt").on("click", function () {
         console.log("end: " + user_created_successfully);
         if (user_created_successfully) {
             console.log("user created successfuly");
-            document.getElementById("success_msg").innerHTML = "user created successfuly";
-
             window.location = "../html_pages/questionnaire.html?uid=" + user.uid;
         }
     }).catch(e => document.getElementById("error_msg").innerHTML = (e.message));
+}
 });
 
+function validate_signup_inputs(name,email, password, verify) {
+    if (name.length<=0 || name.length>32) {
+        document.getElementById("error_message").innerHTML = "Please enter name under 32 characters";
+        $('#modalInputError').modal('show');
+        return;
+    }
+    if (!(validateEmail(email))) {
+        document.getElementById("error_message").innerHTML = "Email not Valid";
+        $('#modalInputError').modal('show');
+        return;
+    }
+    if (password < 6) {
+        document.getElementById("error_message").innerHTML = "Password must contain more then 6 characters";
+        $('#modalInputError').modal('show');
+        return;
+    }
+    if (verify != password) {
+        document.getElementById("error_message").innerHTML = "Passwords dosent match";
+        $('#modalInputError').modal('show');
+        return;
+    }
+}
 
-$("#recover_password_btn").on("click",function(){
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+$("#recover_password_btn").on("click", function () {
     var auth = firebase.auth();
     var email = $("#user_recovery_email").val();
     console.log("recover email was: " + email);
-    auth.sendPasswordResetEmail(email).then(function() {
+    auth.sendPasswordResetEmail(email).then(function () {
         console.log("recover email sent success");
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.log("recover email bad");
     });
 });
