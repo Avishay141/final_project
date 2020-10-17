@@ -39,16 +39,30 @@ var user_gender;
 var userID = get_userID_from_url();
 db.ref("Users/"+userID).on("value", get_gender);
 
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(async function (user) {
+  var hidden_button = document.getElementById("hidden_button");
   if (!user) {
-
     window.location = "../html_pages/index.html";
-  } else {
+  } 
+  else {
     userID = user.uid;
+    if(await user_is_admin())
+      $('.hidden_button').show();
+    else
+      $('.hidden_button').hide();
     console.log("this line shoud be executed once for each login");
   }
 });
-
+async function user_is_admin(){
+  var ans=false;
+  var a =  await db.ref('Users').child(userID).once('value').then(function(snapshot) {
+      var value = snapshot.val();
+      if(value.admin)
+        ans=true;
+  });
+ console.log(ans);
+ return ans;
+}
 
 function get_userID_from_url() {
   var res = location.search.substring(1).split("=")[1];

@@ -11,6 +11,10 @@
  margin: auto;
 }
 
+.hidden_button {
+  display: none;
+}
+
 .container{
   margin: 10%;
   text-align: center;

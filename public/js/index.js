@@ -38,7 +38,6 @@ $("#login_btn").on("click", function () {
 });
 
 $("#sbmt").on("click", function () {
-
     var email = $("#user_email").val();
     var password = $("#user_password1").val();
     var verify = $("#user_password2").val();
@@ -46,7 +45,6 @@ $("#sbmt").on("click", function () {
     var gender = $('input[name=userGenderRadios]:checked').val();
     var user_created_successfully = false;
     if(validate_signup_inputs(name,email, password, verify)){
-
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
         //Registration is successful
         user_created_successfully = true;
@@ -68,7 +66,7 @@ $("#sbmt").on("click", function () {
             console.log("user created successfuly");
             window.location = "../html_pages/questionnaire.html?uid=" + user.uid;
         }
-    }).catch(e => document.getElementById("error_msg").innerHTML = (e.message));
+    }).catch(e => document.getElementById("error_message").innerHTML = (e.message));
 }
 });
 
@@ -76,23 +74,24 @@ function validate_signup_inputs(name,email, password, verify) {
     if (name.length<=0 || name.length>32) {
         document.getElementById("error_message").innerHTML = "Please enter name under 32 characters";
         $('#modalInputError').modal('show');
-        return;
+        return false;
     }
     if (!(validateEmail(email))) {
         document.getElementById("error_message").innerHTML = "Email not Valid";
         $('#modalInputError').modal('show');
-        return;
+        return false;
     }
     if (password < 6) {
         document.getElementById("error_message").innerHTML = "Password must contain more then 6 characters";
         $('#modalInputError').modal('show');
-        return;
+        return false;
     }
     if (verify != password) {
         document.getElementById("error_message").innerHTML = "Passwords dosent match";
         $('#modalInputError').modal('show');
-        return;
+        return false;
     }
+    return true;
 }
 
 function validateEmail(email) {
