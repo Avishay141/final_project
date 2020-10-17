@@ -63,6 +63,16 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-sm-12 file export_to_ecxel">
+        <button type="button" id="export_data_to_excel_btn" class="btn btn-success" >Export data to excel</button>
+     
+        <form action="" method="post" enctype="multipart/form-data">
+          <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
+        </form>
+      </div>
+    </div>
+
     <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -92,6 +102,8 @@
 
 
   <!-- Optional JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.min.js" integrity="sha512-8y82APPyIOwaBCEuQoZM4KdySliHcT2dQwZzkdOx7l2LfGS01ZvNg0A7PpplNTYN66tz7skkFr4rihZQhf9yGA==" crossorigin="anonymous"></script>
+
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -108,7 +120,6 @@
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
   <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 

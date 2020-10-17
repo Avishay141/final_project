@@ -1,3 +1,8 @@
+// //const JSONToCSV = require("json2csv").parse;
+// // const FileSystem = require("fs");
+// const xlsx = require("xlsx");
+
+var db = firebase.database();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
@@ -48,3 +53,34 @@ $("#upload_btn").on("click",async function(event){
 
 
 });
+
+$("#export_data_to_excel_btn").on("click", function (event) {
+  db.ref("Users/").on("value", read_data);
+});
+
+async function read_data(data) {
+
+  var converted_data = await data.val();
+  var ids = Object.keys(converted_data);
+  console.log("converted_data:")
+  console.log(converted_data);
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(converted_data)
+
+  };
+  // var res = await fetch('/convert_to_ecxel', options);
+  //clusters = await res.json();
+  var res = await fetch('/convert_to_ecxel', options);
+  text_res = await res.text();
+  if(text_res == "good"){
+    console.log("Sending request for download excel DB");
+    document.getElementById("excel_db_btn").click();
+  }
+  else
+    console.log("Failed to get excel DB file");
+}

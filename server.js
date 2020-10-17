@@ -13,6 +13,7 @@ const SUCCESS = 0;
 const EXCEL_FILE_PATH = __dirname +"/public/uploads/input.xlsx"
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
+const DOWNLOAD_EXCEL_DB =  "download_excel_db";
 const UPLOAD_FILE = "upload_file";
 const GET_QUEST = "get_quest";
 const AMERICAN = "אמריקאית";
@@ -27,7 +28,14 @@ const FIRST_USER_ANS_COL_NUM = 18;
 const LAST_USER_ANS_COL_NUM = 27;
 const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_COL_NUM;
 
-
+const NAME = "name";
+const GENDER = "gender";
+const USER_EMAIL = "userEmail";
+const GRADE = "grade";
+const CLUSTERS_TEST = "clusters_test";
+const CLUSTER_QUESTIONS = "cluster_questions";
+const QUESTION = "question";
+var ANS = "ans";
 
 // -----------------------------------------------------------------------------//
 
@@ -52,6 +60,10 @@ app.post("/html_pages/management.html", function(req, res){
         /* Send the user the excel file from uploads directory */
         console.log("Sending the file input.xlsx to the user");
         res.download(__dirname +'/public/uploads/input.xlsx','input.xlsx');
+    }
+    else if(action_type == DOWNLOAD_EXCEL_DB){
+        console.log("Sending the file db.xlsx to the user");
+        res.download(__dirname +'/public/tmp/db.xlsx','db.xlsx');
     }
     else{
         console.log("Unknown post request");
@@ -80,6 +92,57 @@ app.post("/calculate_answers", async function(req, res){
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
+
+app.post("/convert_to_ecxel", function(req, res){
+    console.log("!!! got a convert_to_ecxe")
+    var json_data = req.body;
+    var arr = [];
+    var users_id = Object.keys(json_data);
+
+    for(var i =0; i<users_id.length; i++ ){
+        var key = users_id[i];
+        var user_data = create_2_dim_object(json_data[key]);
+        arr.push(user_data);
+    }
+
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@");
+    var wb = xlsx.utils.book_new();
+    var ws = xlsx.utils.json_to_sheet(arr);
+ 
+    
+    xlsx.utils.book_append_sheet(wb, ws, "data");
+    xlsx.writeFile(wb, __dirname + "/public/tmp/db.xlsx");
+    res.send("good");
+
+
+});
+
+function create_2_dim_object(user_object){
+    res= {};
+    res[NAME] = user_object[NAME];
+    res[USER_EMAIL] = user_object[USER_EMAIL];
+    res[GENDER] = user_object[GENDER];
+    res[GRADE] = user_object[GRADE];
+
+    var clusters_test = user_object[CLUSTERS_TEST];
+    if(!clusters_test)
+        return res;
+
+    for(var i =0; i < clusters_test.length; i++){
+        var cluster_questions = clusters_test[i][CLUSTER_QUESTIONS];
+
+        for(var j = 0; j < cluster_questions.length; j++){
+            var tmp_quest = cluster_questions[j];
+            if(typeof(tmp_quest[ANS]) == typeof([]))
+              res[tmp_quest[QUESTION]] = tmp_quest[ANS].join(', ');
+            else
+                res[tmp_quest[QUESTION]] = tmp_quest[ANS];
+        }
+    }
+
+    return res;
+}
+
 // Handling get request
 app.get("/get_questions", function(req, res){
     console.log("@@@ got a tt get request");
