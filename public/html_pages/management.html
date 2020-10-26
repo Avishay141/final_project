@@ -38,18 +38,39 @@
         </li>
       </ul>
     </div>
+    <button type="button" class="btn btn-dark" id="manage_admins_btn" style="float: right;">ערוך מנהלים</button>
     <button type="button" class="btn btn-dark" id="quest_btn" style="float: right;">ערוך שאלות</button>
     <button type="button" class="btn btn-dark" id="users_btn" style="float: right;">שאלוני המשתמשים</button>
   </nav>
 
+  <!--Modal: modalForWrongSignup-->
+  <div class="modal fade" id="modalInputError" tabindex="-1" role="dialog" aria-labelledby="modalWrongSignup"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-danger" role="document">
+      <!--Content-->
+      <div class="modal-content text-center">
+        <!--Header-->
+        <div class="modal-header d-flex justify-content-center">
+          <p class="heading" id="error_message">Wrong signup values</p>
+        </div>
 
-  <h1 id="title">עריכת שאלות</h1>
-  <div class="container">
+        <!--Footer-->
+        <div class="modal-footer flex-center justify-content-center">
+          <a href="" id="continueSignup" data-dismiss="modal" class="btn  btn-outline-danger">Try Again</a>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+  <!--Modal: modalForWrongSignup-->
+
+  <div class="container" id="edit_quest_div">
+    <h1 id="title">העלאה והורדת קבצים</h1>
     <div class="row">
       <div class="col-sm-12 file upload_file">
         <form class="form" id="upload_form">
           <input type="file" name="inputFile" id="input_file">
-          <button type="button" id="upload_btn" class="btn btn-success" >Upload File</button>
+          <button type="button" id="upload_btn" class="btn btn-success">Upload File</button>
 
         </form>
       </div>
@@ -65,27 +86,55 @@
 
     <div class="row">
       <div class="col-sm-12 file export_to_ecxel">
-        <button type="button" id="export_data_to_excel_btn" class="btn btn-success" >Export data to excel</button>
-     
+        <button type="button" id="export_data_to_excel_btn" class="btn btn-success">Export data to excel</button>
+
         <form action="" method="post" enctype="multipart/form-data">
           <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
         </form>
       </div>
     </div>
 
-    <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+    <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-        <div class="modal-body" id="upload_msg">
-          Default message
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="payment-success-ok-btn" class="btn btn-info" data-dismiss="modal" >Ok</button>
-        </div>
+          <div class="modal-body" id="upload_msg">
+            Default message
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="payment-success-ok-btn" class="btn btn-info" data-dismiss="modal">Ok</button>
+          </div>
         </div>
       </div>
+    </div>
+
+  </div>
+
+  <div class="container" id="admins_list">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Enter email of a user you wish to make admin or remove from admin list</label>
+          <input type="email" class="form-control" id="user_email_for_admin" aria-describedby="emailHelp"
+            placeholder="Email">
+          <button type="button" id="add_admin_btn" class="btn btn-success">Add as admin</button>
+          <button type="button" id="remove_admin_btn" class="btn btn-danger">Remove admin</button>
+        </div>
+        <div class="col-2"></div>
       </div>
-    
+    </div>
+
+
+    <h1 id="title">רשימת מנהלים</h1>
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="list-group" id="list-tab" role="tablist" id="admins_list">
+        </div>
+        <div class="col-2"></div>
+      </div>
+    </div>
   </div>
 
 
@@ -99,10 +148,10 @@
 
 
 
-
-
   <!-- Optional JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.min.js" integrity="sha512-8y82APPyIOwaBCEuQoZM4KdySliHcT2dQwZzkdOx7l2LfGS01ZvNg0A7PpplNTYN66tz7skkFr4rihZQhf9yGA==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.min.js"
+    integrity="sha512-8y82APPyIOwaBCEuQoZM4KdySliHcT2dQwZzkdOx7l2LfGS01ZvNg0A7PpplNTYN66tz7skkFr4rihZQhf9yGA=="
+    crossorigin="anonymous"></script>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
