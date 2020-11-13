@@ -152,6 +152,7 @@ async function finish_questionnaire(){
   insert_clusters_to_db();
 
   console.log("@@@ finish questionnaire, your grade: " + final_grade);
+  display_recomendations();
 
 }
 
@@ -273,8 +274,6 @@ function load_questions_from_excel_json(excel_json_obj) {
     else 
       add_question_to_cluster(question);
   }
-
-
 }
 
 function add_question_to_cluster(question) {
@@ -306,6 +305,8 @@ function create_question(i, excel_json_obj) {
     cluster: curr_row[CLUSTER],
     answers: valid_answers,
     user_ans: NON,
+    recomendation: NON,
+    recomendation_link: NON,
     question_type: curr_row[QUEST_TYPE].trim(),
     is_depended: curr_row[IS_DEPENDED],
     depended_on: curr_row[DEPENDED_ON],
@@ -337,7 +338,7 @@ function get_valid_answers(curr_row){
 /* ---------- Functions that create the visual html questions ------- */
 
 function show_cluster(){
-  /* iterating over the questions in the cluster  and putting the auestions in the screen */
+  /* iterating over the questions in the cluster  and putting the them on the screen */
   console.log("entered show_cluster");
   $(".cluster").empty();
   var current_cluster = clusters[current_cluster_index];
@@ -488,6 +489,28 @@ function get_answer_element_id(quest, ans=NON){
   console.log('ERROR: Unknown question type: ' + quest.question_type);
 }
 
+function display_recomendations(){
+  var recomenadtions = {};
+
+  for(var i = 0; i < clusters.length; i++){
+    var curr_questions = clusters[i].questions;
+    for(var j = 0; j < curr_questions.length; j++){
+      var quest_obj = curr_questions[j];
+      recomenadtions[quest_obj.recomendation.trim()] = quest_obj.recomendation_link;
+    }
+  }
+
+  $(".recomendations_for_user").empty();
+  for(var key in recomenadtions) {
+    if (recomenadtions.hasOwnProperty(key) && key != NON && key != NA) {
+      var rec = '<li><span>  '+key+ '.<a href="'+recomenadtions[key]+'" target="_blank">       למידע נוסף</a></span></li>';
+      $(".recomendations_for_user").append(rec);
+    }
+  }
+  document.getElementById("card_recomendations").hidden = false;
+}
+
+
 function replace_null_grades_with_zero(){
   for(var i = 0; i < clusters.length; i++){
     var curr_questions = clusters[i].questions;
@@ -508,7 +531,8 @@ function print_clusters(){
         if(q.question_type == CHECK_BOX)
            user_ans = q.check_box_ans;
 
-        console.log("question " +q.line + ", user_ans: " + user_ans +", grade: " + q.grade);
+        console.log("question " +q.line + ", user_ans: "+ user_ans +", grade: " + q.grade
+         +", recomenadtion: "+ q.recomendation + ", link: " + q.recomendation_link);
   
     }
   }

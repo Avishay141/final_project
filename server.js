@@ -27,6 +27,7 @@ const LAST_ANS_COL_NUM = 12;
 const FIRST_USER_ANS_COL_NUM = 18;
 const LAST_USER_ANS_COL_NUM = 27;
 const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_COL_NUM;
+const USER_ANS1 = 'S';
 
 const NAME = "name";
 const GENDER = "gender";
@@ -270,6 +271,9 @@ const parser = new FormulaParser();
                 curr_quest = curr_questions[j];
                 var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL_NUM});
                 curr_quest.grade = getCellResult(worksheet, final_calc_cell);
+                if(curr_quest.question_type != CHECK_BOX)
+                    update_recomendation_in_quest_obj(worksheet, res_file_path, curr_quest);
+
             }
         }
       
@@ -284,4 +288,40 @@ function getCellResult(worksheet, cellLabel) {
     else {
       return worksheet.getCell(cellCoord.label).value;
     }
+  }
+
+  function update_recomendation_in_quest_obj(res_file_path,res_file_path, curr_quest){
+    var execl_file =  xlsx.readFile(res_file_path);
+    var worksheet_A = execl_file.Sheets[execl_file.SheetNames[0]];
+    var worksheet_B = execl_file.Sheets[execl_file.SheetNames[1]];
+    var ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FIRST_USER_ANS_COL_NUM});
+    if(curr_quest.question_type == SLIDER){
+        // calculating the relevant col num in the recomoendation sheet according to the answer number
+        var rec_col = Math.ceil(parseInt(worksheet_A[ans_cell].v, 10)/10) * 2;
+    }else{
+        for(var i = FIRST_ANS_COL_NUM; i <= LAST_ANS_COL_NUM; i++ ){
+            var tmp_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:i});
+            if(worksheet_A[tmp_cell].v.trim() == worksheet_A[ans_cell].v.trim()){
+                 // calculating the relevant col num in the recomoendation sheet according to the answer number
+                var rec_col = (i-2)*2 -1;
+                break;
+            }
+        }
+    }
+
+    var rec_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:rec_col});
+    var rec_val = worksheet_B[rec_cell].v;
+    try {
+        curr_quest.recomendation = rec_val.split('$')[0].trim();
+        curr_quest.recomendation_link = rec_val.split('$')[1].trim();
+        // the delimiter that seperate the recomendation and the recomenation link in the excel file is '$'
+      }
+      catch(err) {
+        console.log("ERROR: The recomendation for question number: " + curr_quest.line + " is not written in the right foramt.");
+        console.log("The relevant cell in file: " + rec_val);
+        console.log("The correct foramt is: 'link : recomendation'");
+        console.log("For example: www.telhai.co.il : מומלץ להפחית סוכר");
+        console.log(err.message)
+      }
+
   }
