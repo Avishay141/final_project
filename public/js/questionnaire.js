@@ -15,10 +15,11 @@ const ANS8 = 'K';
 const ANS9 = 'L';
 const ANS10 = 'M';
 const FINAL_CALC = 'N';
-const QUEST_TYPE = 'O';
-const IS_DEPENDED = 'P';
-const DEPENDED_ON = 'Q';
-const USER_ANS1 = 'S';
+const CLUSTER_WEIGHT = 'O';
+const QUEST_TYPE = 'P';
+const EFFECTS_THIS_QUESTS = 'Q';
+const ANS_THAT_EFFECT = 'R';
+const USER_ANS1 = 'T';
 
 /* ---------- Visual questions variables ----------*/
 const AMERICAN = "אמריקאית";
@@ -263,6 +264,7 @@ function load_questions_from_excel_json(excel_json_obj) {
 
   for (var i = 1; i <= num_of_questions; i++) {
     var question = create_question(i, excel_json_obj); 
+    console.log(question);
     if (!(cluster_exist(question.cluster))) {   
       var new_cluster = {
         name: (excel_json_obj[root][i][CLUSTER]),
@@ -295,11 +297,20 @@ function create_question(i, excel_json_obj) {
   var root = Object.keys(excel_json_obj)[0];
   var curr_row = excel_json_obj[root][i];
   var valid_answers = get_valid_answers(curr_row);
+  var questions_to_effect_conv;
+  if (curr_row[EFFECTS_THIS_QUESTS] != "NA")
+    questions_to_effect_conv= curr_row[EFFECTS_THIS_QUESTS].search(",") != -1
+      ? (curr_row[EFFECTS_THIS_QUESTS]).split`,`.map(x=>+x) : parseInt(curr_row[EFFECTS_THIS_QUESTS]);
+  else
+    questions_to_effect_conv = NON;
+  console.log(questions_to_effect_conv);
   if(user_gender=="Male")
     question=QUESTION_M;
   else
     question=QUESTION_F;
     
+
+
   return {
     quest: curr_row[question],
     cluster: curr_row[CLUSTER],
@@ -308,8 +319,9 @@ function create_question(i, excel_json_obj) {
     recomendation: NON,
     recomendation_link: NON,
     question_type: curr_row[QUEST_TYPE].trim(),
-    is_depended: curr_row[IS_DEPENDED],
-    depended_on: curr_row[DEPENDED_ON],
+    cluster_weight: parseFloat(curr_row[CLUSTER_WEIGHT]),
+    effects_this_quests: curr_row[EFFECTS_THIS_QUESTS],
+    ans_that_effect: curr_row[ANS_THAT_EFFECT],
     check_box_ans: new Set(),
     line: i,
     grade: NON,
@@ -400,7 +412,7 @@ function get_question_html(quest_obj){
 }
 
 function create_american_quest(q){
-  var quest = '<li>';
+  var quest = '<li id="q'+q.line+'">';
   quest += '<h6>' +q.quest+ '</h6>';
   for(var i =0; i < q.answers.length; i++){
       quest += '<li><label><input type="radio" name="'+AMERICAN+q.line+'" value="'+q.answers[i]+'" id="'+get_answer_element_id(q, q.answers[i])+'"><span>  '+q.answers[i]+'</span></label></li>';
