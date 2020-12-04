@@ -8,6 +8,8 @@ const ExcelJS = require('exceljs');
 const FormulaParser = require('hot-formula-parser').Parser;
 
 // Const Variables
+const NA = 'NA'
+const NOT_ANSWERD = -1;
 const FAILURE = -1;
 const SUCCESS = 0;
 const EXCEL_FILE_PATH = __dirname +"/public/uploads/input.xlsx"
@@ -24,10 +26,10 @@ const FINAL_CALC_COL_NUM = 13;
 const FIRST_ANS_COL_NUM = 3;
 const LAST_ANS_COL_NUM = 12;
 
-const FIRST_USER_ANS_COL_NUM = 18;
-const LAST_USER_ANS_COL_NUM = 27;
+const FIRST_USER_ANS_COL_NUM = 19;
+const LAST_USER_ANS_COL_NUM = 28;
 const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_COL_NUM;
-const USER_ANS1 = 'S';
+const USER_ANS1 = 'T';
 
 const NAME = "name";
 const GENDER = "gender";
@@ -89,7 +91,7 @@ app.post("/calculate_answers", async function(req, res){
     var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
     var updated_clusters_json_object = JSON.stringify(updated_clusters);
     console.log("this is after calling read_final_grade_and_update_clusters()");
-    //console.log(updated_clusters_json_object);
+    console.log(updated_clusters_json_object);
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
@@ -208,7 +210,7 @@ function write_answers_to_excel(clusters){
                 write_check_box_answers(curr_quest, worksheet)
             }
             else{
-                var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FIRST_USER_ANS_COL_NUM});
+                var user_ans_cell = xlsx.utils.encode_cell({r:curr_quest.line-1, c:FIRST_USER_ANS_COL_NUM});
                 worksheet[user_ans_cell].v = String(curr_quest.user_ans).trim();
             }
         }
@@ -225,11 +227,11 @@ function write_answers_to_excel(clusters){
 function write_check_box_answers(quest, worksheet){
     var check_box_ans_arr = Array.from(quest.check_box_ans);
     for(var i =0; i < check_box_ans_arr.length; i++){
-        var user_ans_col = get_user_ans_col(check_box_ans_arr[i], quest.line, worksheet)
+        var user_ans_col = get_user_ans_col(check_box_ans_arr[i], quest.line-1, worksheet)
         if(user_ans_col == FAILURE)
             console.log("Failed to write checkbox answers to excel file")
         else{
-            var user_ans_cell =  xlsx.utils.encode_cell({r:quest.line, c:user_ans_col});
+            var user_ans_cell =  xlsx.utils.encode_cell({r:quest.line-1, c:user_ans_col});
             worksheet[user_ans_cell].v = String(check_box_ans_arr[i]).trim();
         }
     }
@@ -242,7 +244,6 @@ function get_user_ans_col(user_ans, line_num, worksheet){
             return i + DIFF_OF_ANS_AND_USER_ANS_COL_INDEX;
     }
 
-    console.log("line 195: Failed to find the right user_ans column for answer: " + user_ans);
     return FAILURE
     
 }
@@ -269,7 +270,7 @@ const parser = new FormulaParser();
             var curr_questions = clusters[i].questions;
             for(var j = 0; j < curr_questions.length; j++){
                 curr_quest = curr_questions[j];
-                var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FINAL_CALC_COL_NUM});
+                var final_calc_cell = xlsx.utils.encode_cell({r:curr_quest.line-1, c:FINAL_CALC_COL_NUM});
                 curr_quest.grade = getCellResult(worksheet, final_calc_cell);
                 if(curr_quest.question_type != CHECK_BOX)
                     update_recomendation_in_quest_obj(worksheet, res_file_path, curr_quest);
@@ -291,16 +292,19 @@ function getCellResult(worksheet, cellLabel) {
   }
 
   function update_recomendation_in_quest_obj(res_file_path,res_file_path, curr_quest){
+    if(curr_quest.user_ans == NOT_ANSWERD)
+        return;
+
     var execl_file =  xlsx.readFile(res_file_path);
     var worksheet_A = execl_file.Sheets[execl_file.SheetNames[0]];
     var worksheet_B = execl_file.Sheets[execl_file.SheetNames[1]];
-    var ans_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:FIRST_USER_ANS_COL_NUM});
+    var ans_cell = xlsx.utils.encode_cell({r:curr_quest.line-1, c:FIRST_USER_ANS_COL_NUM});
     if(curr_quest.question_type == SLIDER){
         // calculating the relevant col num in the recomoendation sheet according to the answer number
         var rec_col = Math.ceil(parseInt(worksheet_A[ans_cell].v, 10)/10) * 2;
     }else{
         for(var i = FIRST_ANS_COL_NUM; i <= LAST_ANS_COL_NUM; i++ ){
-            var tmp_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:i});
+            var tmp_cell = xlsx.utils.encode_cell({r:curr_quest.line-1, c:i});
             if(worksheet_A[tmp_cell].v.trim() == worksheet_A[ans_cell].v.trim()){
                  // calculating the relevant col num in the recomoendation sheet according to the answer number
                 var rec_col = (i-2)*2 -1;
@@ -309,15 +313,20 @@ function getCellResult(worksheet, cellLabel) {
         }
     }
 
-    var rec_cell = xlsx.utils.encode_cell({r:curr_quest.line, c:rec_col});
+    var rec_cell = xlsx.utils.encode_cell({r:curr_quest.line-1, c:rec_col});
     var rec_val = worksheet_B[rec_cell].v;
+    if(rec_val == NA){
+        console.log("No recomondation for this answer. question: " + curr_quest.line-1 + ", answer: " + curr_quest.user_ans);
+        return;
+    }
+        
     try {
         curr_quest.recomendation = rec_val.split('$')[0].trim();
         curr_quest.recomendation_link = rec_val.split('$')[1].trim();
         // the delimiter that seperate the recomendation and the recomenation link in the excel file is '$'
       }
       catch(err) {
-        console.log("ERROR: The recomendation for question number: " + curr_quest.line + " is not written in the right foramt.");
+        console.log("ERROR: The recomendation for question number: " + curr_quest.line-1 + " is not written in the right foramt.");
         console.log("The relevant cell in file: " + rec_val);
         console.log("The correct foramt is: 'link : recomendation'");
         console.log("For example: www.telhai.co.il : מומלץ להפחית סוכר");
