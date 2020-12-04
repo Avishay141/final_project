@@ -366,7 +366,6 @@ function get_valid_answers(curr_row) {
 
 function show_cluster() {
   /* iterating over the questions in the cluster  and putting the them on the screen */
-  console.log("entered show_cluster");
   $(".cluster").empty();
   var current_cluster = clusters[current_cluster_index];
   document.getElementById("cluster_name_title").innerHTML = current_cluster.name;
