@@ -16,10 +16,12 @@ const ANS9 = 'L';
 const ANS10 = 'M';
 const FINAL_CALC = 'N';
 const CLUSTER_WEIGHT = 'O';
-const QUEST_TYPE = 'P';
-const EFFECTS_THIS_QUESTS = 'Q';
-const ANS_THAT_EFFECT = 'R';
-const USER_ANS1 = 'T';
+const MAX_QUEST_SCORE = 'P'
+const QUEST_TYPE = 'Q';
+const EFFECTS_THIS_QUESTS = 'R';
+const ANS_THAT_EFFECT = 'S';
+const COMMENTS = 'T';
+const USER_ANS1 = 'U';
 
 /* ---------- Visual questions variables ----------*/
 const AMERICAN = "אמריקאית";
@@ -30,7 +32,7 @@ const RANGE_SLIDER = 'range_Slider';
 const NA = 'NA';
 const RADIO_BTN = 'radio_btn';
 const BOX_ANS = 'box_ans';
-const NOT_ANSWERD = -1;
+const NOT_ANSWERD = -99;
 const QUEST_DIV_ID_PREFIX = 'div_q_';
 
 /* ----- initialize variables --------- */
@@ -331,7 +333,8 @@ function create_question(i, excel_json_obj) {
     grade: NON,
     gender: user_gender,
     hidden:hidden_status,
-    cluster_wight: curr_row[CLUSTER_WEIGHT]
+    cluster_wight: curr_row[CLUSTER_WEIGHT],
+    max_quest_score: curr_row[MAX_QUEST_SCORE]
   }
 }
 
@@ -619,17 +622,32 @@ function update_answers_of_hidden_quests(){
     }
 }
 
+function get_max_cluster_score(cluster){
+  var max_cluster_score = 0; 
+  var questions = cluster.questions;
+  for (var i = 0; i < questions.length; i++){
+    if(questions[i].user_ans != NOT_ANSWERD && questions[i].grade != NON)
+      max_cluster_score += Number(questions[i].max_quest_score);
+  }
+
+ return max_cluster_score
+}
+
 function calculate_final_grade() {
   var final_grade = 0;
   for (var i = 0; i < clusters.length; i++) {
     var curr_questions = clusters[i].questions;
     var curr_cluster_wight = Number(curr_questions[0].cluster_weight) / 100;
+    var curr_max_cluster_score = get_max_cluster_score(clusters[i]);
     for (var j = 0; j < curr_questions.length; j++){
       var quest = curr_questions[j];
-      if(quest.user_ans != NOT_ANSWERD && quest.grade != NON)
-        final_grade += Number(quest.grade) * curr_cluster_wight;
+      if(quest.user_ans != NOT_ANSWERD && quest.grade != NON){
+        var final_quest_score =  Number(quest.grade) / curr_max_cluster_score * 100;
+        console.log("line " + quest.line + ",final_quest_score: " + final_quest_score);
+        final_grade += final_quest_score * curr_cluster_wight;
+      }
     }  
   }
-  return final_grade;
+  return Math.ceil(final_grade);
 }
 

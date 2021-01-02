@@ -9,7 +9,7 @@ const FormulaParser = require('hot-formula-parser').Parser;
 
 // Const Variables
 const NA = 'NA'
-const NOT_ANSWERD = -1;
+const NOT_ANSWERD = -99;
 const FAILURE = -1;
 const SUCCESS = 0;
 const EXCEL_FILE_PATH = __dirname +"/public/uploads/input.xlsx"
@@ -17,7 +17,6 @@ const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const DOWNLOAD_EXCEL_DB =  "download_excel_db";
 const UPLOAD_FILE = "upload_file";
-const GET_QUEST = "get_quest";
 const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
 const CHECK_BOX = "check box";
@@ -26,10 +25,8 @@ const FINAL_CALC_COL_NUM = 13;
 const FIRST_ANS_COL_NUM = 3;
 const LAST_ANS_COL_NUM = 12;
 
-const FIRST_USER_ANS_COL_NUM = 19;
-const LAST_USER_ANS_COL_NUM = 28;
+const FIRST_USER_ANS_COL_NUM = 20;
 const DIFF_OF_ANS_AND_USER_ANS_COL_INDEX = FIRST_USER_ANS_COL_NUM - FIRST_ANS_COL_NUM;
-const USER_ANS1 = 'T';
 
 const NAME = "name";
 const GENDER = "gender";
