@@ -6,13 +6,21 @@ const upload = require('express-fileupload');
 const excelToJson = require('convert-excel-to-json');
 const ExcelJS = require('exceljs');
 const FormulaParser = require('hot-formula-parser').Parser;
+const {Storage} = require('@google-cloud/storage');
+const fs = require("fs")
 
 // Const Variables
+const storage = new Storage({ 
+    keyFilename: "nutrition-fbeec-firebase-adminsdk-47lpv-5de40ebb8a.json",
+    projectId: "nutrition-fbeec"
+});
+const bucketName = "nutrition-fbeec.appspot.com"
+const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx"
+
 const NA = 'NA'
 const NOT_ANSWERD = -99;
 const FAILURE = -1;
 const SUCCESS = 0;
-const EXCEL_FILE_PATH = __dirname +"/public/uploads/input.xlsx"
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const DOWNLOAD_EXCEL_DB =  "download_excel_db";
@@ -56,12 +64,7 @@ app.post("/html_pages/management.html", function(req, res){
     action_type = req.body[ACTION_TYPE];
     console.log("action_type is: " + action_type);
 
-    if (action_type == DOWNLOAD_FILE){
-        /* Send the user the excel file from uploads directory */
-        console.log("Sending the file input.xlsx to the user");
-        res.download(__dirname +'/public/uploads/input.xlsx','input.xlsx');
-    }
-    else if(action_type == DOWNLOAD_EXCEL_DB){
+    if(action_type == DOWNLOAD_EXCEL_DB){
         console.log("Sending the file db.xlsx to the user");
         res.download(__dirname +'/public/tmp/db.xlsx','db.xlsx');
     }
@@ -73,22 +76,43 @@ app.post("/html_pages/management.html", function(req, res){
     console.log("@@@@@@@ got here")
 });
 
-app.post("/upload_file", async function(req, res){
-    console.log("line 78: get a upload file request !!!!");
-    upload_excel_file(req, res);
 
 
+
+app.post("/get_updated_excel", async function(req, res){
+    console.log("get_updated_excel was called !!!!");
+    user_id = parse_user_id(req)
+    var destFilename = get_user_excel_file_name(user_id);
+
+    if (!fs.existsSync(destFilename)){
+        console.log("Getting excel file for user " + user_id);
+        var file_path = EXCEL_STORAGE_FILE_PATH;
+        const options = {
+        // The path to which the file should be downloaded, e.g. "./file.txt"
+        destination: destFilename,
+        };
+
+        // Downloads the file
+        await storage.bucket(bucketName).file(file_path).download(options);
+    }
+    else{console.log("Already have excel file for user " + user_id)};
+    res.send("Got excel file for user " + user_id);
 });
+
+
+
+
 
 app.post("/calculate_answers", async function(req, res){
     console.log("get a calculate_answers request !!!!");
-    console.log(req.body);
-    var clusters = req.body;
-    var tmp_file_path = write_answers_to_excel(clusters);
+    var data = req.body;
+    var user_id = data.user_id;
+    var clusters = data.all_clusters;
+    var tmp_file_path = write_answers_to_excel(user_id, clusters);
     var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
     var updated_clusters_json_object = JSON.stringify(updated_clusters);
     console.log("this is after calling read_final_grade_and_update_clusters()");
-    console.log(updated_clusters_json_object);
+    // console.log(updated_clusters_json_object);
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
@@ -143,15 +167,17 @@ function create_2_dim_object(user_object){
     return res;
 }
 
-// Handling get request
-app.get("/get_questions", function(req, res){
+
+app.post("/get_questions", function(req, res){
     console.log("@@@ got a tt get request");
-    var excel_json_obj = convert_excel_to_json();
+    var user_id = parse_user_id(req);
+    var excel_json_obj = convert_excel_to_json(user_id);
     var excel_json_string = JSON.stringify(excel_json_obj)
     res.send(excel_json_string);
  
 });
 
+// Handling get request
 
 // Send the home page to the user
 app.get("/", function(req, res){
@@ -160,43 +186,19 @@ app.get("/", function(req, res){
 
 // ------------------- Service Functions -------------------- 
 
-function upload_excel_file(req, res){
-    /*upload excel file to uploads folder
-    return: success message if the file was uploaded successfully, else error message
-    */
-
-    if(req.files){
-       console.log(req.files);
-       var file = req.files.upload_file;
-       var fname = file.name;
-       console.log("file name: " + fname);
-
-       file.mv(__dirname + "/public/uploads/" + fname , function(err){
-           if(err){
-            console.log("Failed to upload to file: " + fname);
-                res.send(err);
-           }
-            else{
-                console.log("file uploaded successfully");
-                //res.sendStatus(200);
-                res.send("file uploaded successfully");
-            }
-       })
-
-   }
-}
-
-function convert_excel_to_json(){
-    console.log("!!!!!!! EXCEL_FILE_PATH: " + EXCEL_FILE_PATH);
+function convert_excel_to_json(user_id){
+    var user_excel_file_name = get_user_excel_file_name(user_id);
+    console.log("!!!!!!! user_excel_file_name: " + user_excel_file_name);
     var json_object = excelToJson({
-        sourceFile: EXCEL_FILE_PATH
+        sourceFile: user_excel_file_name
     });
     console.log("json_excel: " + json_object);
     return json_object;
 }
 
-function write_answers_to_excel(clusters){
-    var execl_file =  xlsx.readFile(__dirname + "/public/uploads/input.xlsx");
+function write_answers_to_excel(user_id, clusters){
+    var user_excel_file_name = get_user_excel_file_name(user_id);
+    var execl_file =  xlsx.readFile(user_excel_file_name);
     var worksheet = execl_file.Sheets[execl_file.SheetNames[0]];
 
     for(var i = 0; i < clusters.length; i++){
@@ -331,3 +333,14 @@ function getCellResult(worksheet, cellLabel) {
       }
 
   }
+
+function parse_user_id(req){
+    var json_data = req.body;
+    var user_id_key = Object.keys(json_data)[0];
+    var user_id =  json_data[user_id_key];
+    return user_id;
+}
+
+function get_user_excel_file_name(user_id){
+    return './public/tmp/input'+user_id+'.xlsx';
+}

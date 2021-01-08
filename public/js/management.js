@@ -1,8 +1,7 @@
-// //const JSONToCSV = require("json2csv").parse;
-// // const FileSystem = require("fs");
-// const xlsx = require("xlsx");
 
+const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx";
 var db = firebase.database();
+const file_storage = firebase.storage();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
@@ -87,8 +86,6 @@ $("#remove_admin_btn").on("click", async function () {
 });
 
 
-
-
 async function email_is_valid(new_admin_email){
   var path=null;
   var a =  await db.ref('Users').orderByChild('userEmail').equalTo(new_admin_email).once('value').then(function(snapshot) {
@@ -100,8 +97,6 @@ async function email_is_valid(new_admin_email){
 }
 
 
-
-
 $("#manage_admins_btn").on("click", function () {
   create_admins_list();
   var questions_div = document.getElementById('edit_quest_div');
@@ -110,28 +105,6 @@ $("#manage_admins_btn").on("click", function () {
   admins_div.style.visibility = 'visible';
 });
 
-$("#upload_btn").on("click",async function(event){
-  var input_file = document.getElementById("input_file");
-  var form_data = new FormData();
-  var file = input_file.files[0];
-  if(!file)
-    return;
-
-  form_data.append("upload_file" , file);
-
-
-  const options = {
-    method: 'POST',
-    body: form_data
-  };
-  var res = await fetch('/upload_file', options);
-  var msg_from_server = await res.text();
-  console.log(msg_from_server);
-  document.getElementById("upload_msg").innerHTML = msg_from_server;
-  $('#upload_file_modal').modal('show');
-
-
-});
 
 $("#export_data_to_excel_btn").on("click", function (event) {
   db.ref("Users/").on("value", read_data);
@@ -152,8 +125,7 @@ async function read_data(data) {
     body: JSON.stringify(converted_data)
 
   };
-  // var res = await fetch('/convert_to_ecxel', options);
-  //clusters = await res.json();
+
   var res = await fetch('/convert_to_ecxel', options);
   text_res = await res.text();
   if(text_res == "good"){
@@ -163,3 +135,73 @@ async function read_data(data) {
   else
     console.log("Failed to get excel DB file");
 }
+
+
+
+$("#input_file_btn").on("change",function(event){
+
+  var input_file = document.getElementById("input_file_btn");
+  if(!input_file.value)
+    return;
+
+  file_name = input_file.files[0].name;
+  console.log("file_name: " + file_name);
+
+});
+
+$("#upload_btn").on("click",function(event){
+
+  var input_file = document.getElementById("input_file_btn");
+  if(!input_file.value){
+    document.getElementById("upload_msg").innerHTML = "No file was chosen";
+    $('#upload_file_modal').modal('show');
+    return;
+  }
+  var file = input_file.files[0];
+  if (file.name != 'input.xlsx'){
+    document.getElementById("upload_msg").innerHTML = "File name has to be input and of type xlsx";
+    $('#upload_file_modal').modal('show');
+    return;
+  }
+
+  upload_excel_to_storage()
+
+});
+
+function upload_excel_to_storage(){
+  document.getElementById("upload_msg").innerHTML = "File was uploaded successfully";
+  var input_file = document.getElementById("input_file_btn");
+  try{
+    var storage_ref = file_storage.ref(EXCEL_STORAGE_FILE_PATH);
+    storage_ref.put(input_file.files[0]);
+  }catch{
+    document.getElementById("upload_msg").innerHTML = "An error occuerd. Failed to upload file";
+  }
+
+  $('#upload_file_modal').modal('show');
+
+}
+
+
+$("#download_excel_file").on("click",async function(event){
+
+  var storageRef = file_storage.ref(EXCEL_STORAGE_FILE_PATH)
+
+  storageRef.getDownloadURL().then(function(url) {
+    var link = document.createElement("a");
+    if (link.download !== undefined) {
+        link.setAttribute("href", url);
+        link.setAttribute("target", "_blank");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+  });
+
+});
+
+
+
+
+

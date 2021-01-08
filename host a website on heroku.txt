@@ -1,0 +1,55 @@
+after we installed the heroku CLI we need to do the following:
+
+* open cmd and run : heroku login -i
+
+* after we logged in with our user we need to do the following:
+
+* nevigate the the root directory of the project.
+
+* run heroku create
+
+* run the command: npm init
+* run the command: npm install body-parser express request
+* run the command: > Procfile
+(it cerates a file called Procfile that has to type extention, it can't be called Procfile.txt).
+
+* open the Procfile and write this i
+nside: web: node app.js.
+
+* in the root directory create a new file called app.js
+
+
+
+* copy and paste the following to the app.js file:
+
+-----------------------------------------------------------------
+
+const bodyParser = require("body-parser");
+const express = require("express");
+const request = require("request");
+
+const app = express();
+
+app.use(express.static("public"));
+
+app.get("/" , function(req, res){
+    res.sendFile(__dirname + "index.html");
+});
+
+// we write "|| 3000" for localhost testing 
+app.listen(process.env.PORT ||3000, function(){
+    console.log("Server is running on port 3000!!!");
+});
+
+-----------------------------------------------------------------
+
+* create a folder called "public" in the root directory of the project. ( it has to have the same name that is written in the command : 'app.use(express.static("public"));' in the app.js file).
+
+* move all the project files that we wrote (html, css, js , execpt app.js) to the public folder.
+
+* run: git push heroku master
+
+after this command the url of the website will be written in the output. for exapmple:
+https://calm-peak-58723.herokuapp.com
+
+every time we want to update the website we need to run : git push heroku master

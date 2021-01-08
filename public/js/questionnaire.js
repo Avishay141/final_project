@@ -153,12 +153,16 @@ function save_cluster_answers() {
 
 
 async function finish_questionnaire() {
+  var data = {
+    user_id: userID,
+    all_clusters: clusters
+  }
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(clusters)
+    body: JSON.stringify(data)
 
   };
   var res = await fetch('/calculate_answers', options);
@@ -231,19 +235,34 @@ $("#start_quest_btn").on("click", function () {
 });
 
 async function run_questionnaire() {
+  await get_updated_excel_from_storage()
   var quest_json_object = await get_questions_from_server();
   load_questions_from_excel_json(quest_json_object);
   hide_and_show_relevant_html_elements();
   show_cluster();
 }
 
+async function get_updated_excel_from_storage() {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user_id: userID})
+  };
+
+  var res = await fetch('/get_updated_excel', options);
+  var server_msg = await res.text();
+  console.log(server_msg);
+}
+
 async function get_questions_from_server() {
   const options = {
-    method: 'GET',
+    method: 'POST',
     headers: {
-      //'Content-Type': 'application/json'
-      'Content-Type': 'text/plain'
-    }
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user_id: userID})
   };
   var res = await fetch('/get_questions', options);
   var quest_json_str = await res.text();
