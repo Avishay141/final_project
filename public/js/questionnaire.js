@@ -139,16 +139,7 @@ function save_cluster_answers() {
         tmp_quest.user_ans = ans;
 
       }
-    
- 
-      // if(tmp_quest.question_type == CHECK_BOX)
-      //   tmp_quest.check_box_ans=[];
-      // else 
-      //   tmp_quest.user_ans = "NA";
-    
-
   }
-
 }
 
 
@@ -196,7 +187,7 @@ function insert_clusters_to_db() {
         ans_to_db_str[i].cluster_questions.push({ question: clusters[i].questions[j].quest, ans: clusters[i].questions[j].user_ans });
     }
   }
-  var path = "Users/" + userID;
+  var path = get_user_db_path();
   for (var i = 0; i < clusters.length; i++) {
     db.ref(path).update({
       clusters_test: ans_to_db_str
@@ -667,6 +658,13 @@ function calculate_final_grade() {
       }
     }  
   }
-  return Math.ceil(final_grade);
+  final_grade = Math.ceil(final_grade);
+  // updating DB with the new grade of the user
+  var path = get_user_db_path()
+  db.ref(path).update({ grade: final_grade});  
+  return final_grade;
 }
 
+function get_user_db_path(){
+  return  "Users/" + userID;
+}

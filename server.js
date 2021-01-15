@@ -84,18 +84,15 @@ app.post("/get_updated_excel", async function(req, res){
     user_id = parse_user_id(req)
     var destFilename = get_user_excel_file_name(user_id);
 
-    if (!fs.existsSync(destFilename)){
-        console.log("Getting excel file for user " + user_id);
-        var file_path = EXCEL_STORAGE_FILE_PATH;
-        const options = {
-        // The path to which the file should be downloaded, e.g. "./file.txt"
-        destination: destFilename,
-        };
+    console.log("Getting excel file for user " + user_id);
+    var file_path = EXCEL_STORAGE_FILE_PATH;
+    const options = {
+    // The path to which the file should be downloaded, e.g. "./file.txt"
+    destination: destFilename,
+    };
 
-        // Downloads the file
-        await storage.bucket(bucketName).file(file_path).download(options);
-    }
-    else{console.log("Already have excel file for user " + user_id)};
+    // Downloads the file
+    await storage.bucket(bucketName).file(file_path).download(options);
     res.send("Got excel file for user " + user_id);
 });
 

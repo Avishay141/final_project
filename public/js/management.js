@@ -1,5 +1,6 @@
 
 const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx";
+const TEMPLATE_FILE_PATH = "files/template.xlsx";
 var db = firebase.database();
 const file_storage = firebase.storage();
 
@@ -182,10 +183,16 @@ function upload_excel_to_storage(){
 
 }
 
-
 $("#download_excel_file").on("click",async function(event){
+    download_file_form_fb_storage(EXCEL_STORAGE_FILE_PATH);
+});
 
-  var storageRef = file_storage.ref(EXCEL_STORAGE_FILE_PATH)
+$("#download_template_file").on("click",async function(event){
+  download_file_form_fb_storage(TEMPLATE_FILE_PATH);
+});
+
+async function download_file_form_fb_storage(file_path){
+  var storageRef = file_storage.ref(file_path)
 
   storageRef.getDownloadURL().then(function(url) {
     var link = document.createElement("a");
@@ -198,9 +205,7 @@ $("#download_excel_file").on("click",async function(event){
         document.body.removeChild(link);
     }
   });
-
-});
-
+}
 
 
 
