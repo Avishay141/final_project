@@ -73,9 +73,12 @@
     </div>
     <div class="row">
       <div class="col-sm-12 file download_file">
-        <form action="" method="post" enctype="multipart/form-data">
-          <button type="submit" class="btn btn-success download_file" name="action_type" value="download_file">הורד קובץ אקסל</button>
-        </form>
+        <!-- <form action="" method="post" enctype="multipart/form-data">
+          <button type="submit" class="btn btn-success download_file" name="action_type" value="download_file">Download
+            Excel File</button>
+        </form> -->
+        <button type="submit" class="btn btn-success" id="download_excel_file">הורד קובץ אקסל</button>
+         
       </div>
     </div>
 
@@ -86,6 +89,12 @@
         <form action="" method="post" enctype="multipart/form-data">
           <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
         </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 file download_file">
+        <button type="submit" class="btn btn-dark" id="download_template_file">Download Template </button>
       </div>
     </div>
 
@@ -137,13 +146,6 @@
 
 
 
-
-
-
-
-
-
-
   <!-- Optional JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.min.js"
     integrity="sha512-8y82APPyIOwaBCEuQoZM4KdySliHcT2dQwZzkdOx7l2LfGS01ZvNg0A7PpplNTYN66tz7skkFr4rihZQhf9yGA=="
@@ -165,6 +167,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
   <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 
