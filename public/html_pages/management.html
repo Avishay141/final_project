@@ -18,29 +18,25 @@
 </head>
 
 <body>
-
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <button type="button" class="btn btn-dark" id="logout_btn">Logout</button>
-    <a class="navbar-brand" href="#"></a>
-    <img
-      src="https://p1.hiclipart.com/preview/213/1021/220/google-logo-background-teacher-school-education-student-world-teachers-day-learning-teacher-education-png-clipart.jpg"
-      width="50" height="50" alt="">
+   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" type="button" id="move_to_main">Home <span class="sr-only">(current)</span></a>
-        </li>
-      </ul>
-    </div>
-    <button type="button" class="btn btn-dark" id="manage_admins_btn" style="float: right;">ערוך מנהלים</button>
-    <button type="button" class="btn btn-dark" id="quest_btn" style="float: right;">ערוך שאלות</button>
-    <button type="button" class="btn btn-dark" id="users_btn" style="float: right;">שאלוני המשתמשים</button>
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav ml-auto">
+      <button type="button"  class="btn btn-dark" id="manage_admins_btn" >ערוך מנהלים</button>
+      <button type="button"  class="btn btn-dark" id="quest_btn" >ערוך שאלות</button>
+      <button type="button"  class="btn btn-dark" id="users_btn" >שאלוני המשתמשים</button>
+      <button type="button"  class="btn btn-dark" id="logout_btn">התנתק</button>
+      <button type="button"  class="btn btn-dark" id="move_to_main">בית </button>
+    </ul>  
+  </div>  
+    <img
+    src="https://www.your-college.com/wp-content/uploads/2018/02/%D7%94%D7%9E%D7%9B%D7%9C%D7%9C%D7%94-%D7%94%D7%90%D7%A7%D7%93%D7%9E%D7%99%D7%AA-%D7%AA%D7%9C-%D7%97%D7%99.png"
+    width="50" height="50" alt="icon">
+ 
   </nav>
 
   <!--Modal: modalForWrongSignup-->
@@ -70,7 +66,7 @@
       <div class="col-sm-12 file upload_file">
         <form class="form" id="upload_form">
           <input type="file" name="inputFile" id="input_file">
-          <button type="button" id="upload_btn" class="btn btn-success">Upload File</button>
+          <button type="button" id="upload_btn" class="btn btn-success">העלה קובץ</button>
 
         </form>
       </div>
@@ -78,15 +74,14 @@
     <div class="row">
       <div class="col-sm-12 file download_file">
         <form action="" method="post" enctype="multipart/form-data">
-          <button type="submit" class="btn btn-success download_file" name="action_type" value="download_file">Download
-            Excel File</button>
+          <button type="submit" class="btn btn-success download_file" name="action_type" value="download_file">הורד קובץ אקסל</button>
         </form>
       </div>
     </div>
 
     <div class="row">
       <div class="col-sm-12 file export_to_ecxel">
-        <button type="button" id="export_data_to_excel_btn" class="btn btn-success">Export data to excel</button>
+        <button type="button" id="export_data_to_excel_btn" class="btn btn-success">ייצא מידע לקובץ אקסל</button>
 
         <form action="" method="post" enctype="multipart/form-data">
           <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
@@ -110,7 +105,16 @@
 
   </div>
 
-  <div class="container" id="admins_list">
+  <div class="container" visibility='hidden' id="admins_list">
+    <h1 id="title">רשימת מנהלים</h1>
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="list-group" id="list-tab" role="tablist" id="admins_list">
+        </div>
+        <div class="col-2"></div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-2"></div>
       <div class="col-8">
@@ -126,15 +130,7 @@
     </div>
 
 
-    <h1 id="title">רשימת מנהלים</h1>
-    <div class="row">
-      <div class="col-2"></div>
-      <div class="col-8">
-        <div class="list-group" id="list-tab" role="tablist" id="admins_list">
-        </div>
-        <div class="col-2"></div>
-      </div>
-    </div>
+    
   </div>
 
 

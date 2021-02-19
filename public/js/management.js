@@ -3,6 +3,8 @@
 // const xlsx = require("xlsx");
 
 var db = firebase.database();
+var start_admins_div = document.getElementById('admins_list');
+start_admins_div.style.visibility = 'hidden';
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {

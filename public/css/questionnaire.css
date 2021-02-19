@@ -8,7 +8,8 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
- margin: auto;
+  margin: 30%;
+  margin-top: auto;
 }
 
 .hidden_button {
@@ -16,7 +17,7 @@
 }
 
 .container{
-  margin: 10%;
+  margin: 20%;
   text-align: center;
 }
 
@@ -26,14 +27,10 @@
 }
 
 .card.questtions{
-margin: 5%;
+margin: 1%;
 
 }
-.title{
-  background-color: blue;
-  margin: 0 auto;
-  text-align: center;
-}
+
 
 .next_button{
   margin: 15px;

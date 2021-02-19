@@ -39,18 +39,21 @@ var db = firebase.database();
 var user_gender; 
 var userID = get_userID_from_url();
 db.ref("Users/"+userID).on("value", get_gender);
+/* ----- hide html elements --------- */
+var start_hidden_button = document.getElementById('manage_btn');
+start_hidden_button.style.visibility = 'hidden';
 
 firebase.auth().onAuthStateChanged(async function (user) {
-  var hidden_button = document.getElementById("hidden_button");
+  var hidden_button = document.getElementById("manage_btn");
   if (!user) {
     window.location = "../html_pages/index.html";
   } 
   else {
     userID = user.uid;
     if(await user_is_admin())
-      $('.hidden_button').show();
+      hidden_button.style.visibility = 'visible';
     else
-      $('.hidden_button').hide();
+    hidden_button.style.visibility = 'hidden';
     console.log("this line shoud be executed once for each login");
   }
 });
