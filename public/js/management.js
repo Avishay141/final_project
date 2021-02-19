@@ -209,6 +209,26 @@ async function download_file_form_fb_storage(file_path){
   });
 }
 
+async function run_questionnaire() {
+  await get_updated_excel_from_storage()
+  var quest_json_object = await get_questions_from_server();
+  load_questions_from_excel_json(quest_json_object);
+  hide_and_show_relevant_html_elements();
+  show_cluster();
+}
 
+async function get_updated_excel_from_storage() {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user_id: userID})
+  };
+
+  var res = await fetch('/get_updated_excel', options);
+  var server_msg = await res.text();
+  console.log(server_msg);
+}
 
 

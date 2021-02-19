@@ -16,6 +16,7 @@ const storage = new Storage({
 });
 const bucketName = "nutrition-fbeec.appspot.com"
 const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx"
+const EXCEL_STORAGE_INSTRUCTIONS_FILE_PATH = "files/instructions.pdf"
 
 const NA = 'NA'
 const NOT_ANSWERD = -99;
@@ -24,6 +25,7 @@ const SUCCESS = 0;
 const ACTION_TYPE = "action_type";
 const DOWNLOAD_FILE = "download_file";
 const DOWNLOAD_EXCEL_DB =  "download_excel_db";
+const DOWNLOAD_INSTRUCTIONS = "download_instructions";
 const UPLOAD_FILE = "upload_file";
 const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
@@ -67,17 +69,15 @@ app.post("/html_pages/management.html", function(req, res){
     if(action_type == DOWNLOAD_EXCEL_DB){
         console.log("Sending the file db.xlsx to the user");
         res.download(__dirname +'/public/tmp/db.xlsx','db.xlsx');
-    }
-    else{
+    }else if (action_type == DOWNLOAD_INSTRUCTIONS){
+        send_instructions(req, res);
+    }else{
         console.log("Unknown post request");
         res.status(204).send()
     }
     
     console.log("@@@@@@@ got here")
 });
-
-
-
 
 app.post("/get_updated_excel", async function(req, res){
     console.log("get_updated_excel was called !!!!");
@@ -107,12 +107,22 @@ app.post("/calculate_answers", async function(req, res){
     var clusters = data.all_clusters;
     var tmp_file_path = write_answers_to_excel(user_id, clusters);
     var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
+    remove_file(tmp_file_path)
+    remove_file(get_user_excel_file_name(user_id))
     var updated_clusters_json_object = JSON.stringify(updated_clusters);
     console.log("this is after calling read_final_grade_and_update_clusters()");
-    // console.log(updated_clusters_json_object);
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
+
+function remove_file(file_path){
+    try {
+         fs.unlinkSync(file_path)
+    //file removed
+    } catch(err) {
+        console.error(err)
+    }
+}
 
 app.post("/convert_to_ecxel", function(req, res){
     console.log("!!! got a convert_to_ecxe")
@@ -137,6 +147,25 @@ app.post("/convert_to_ecxel", function(req, res){
 
 
 });
+
+async function send_instructions(req, res){
+    console.log("get_instructions was called !!!!");
+
+
+    destFilename =  './public/tmp/instructions.pdf';
+    
+    var file_path = EXCEL_STORAGE_INSTRUCTIONS_FILE_PATH;
+    const options = {
+    // The path to which the file should be downloaded, e.g. "./file.txt"
+    destination: destFilename,
+    };
+
+    // Downloads the file
+    await storage.bucket(bucketName).file(file_path).download(options);
+    // res.download(destFilename,'instructions.pdf');
+    res.download(destFilename,'instructions.pdf');
+}
+
 
 function create_2_dim_object(user_object){
     res= {};
@@ -212,9 +241,7 @@ function write_answers_to_excel(user_id, clusters){
         }
     }
 
-    //var random_num = String(Math.floor(Math.random() * 10000000));
-    var random_num = "1";
-    var res_file_path = __dirname + "/public/tmp/res"+random_num+".xlsx";
+    var res_file_path = __dirname + "/public/tmp/res"+user_id+".xlsx";
     xlsx.writeFile(execl_file, res_file_path);
     console.log("Finish writing answers to excel");
     return res_file_path;
