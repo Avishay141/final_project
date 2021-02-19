@@ -21,12 +21,9 @@ const EXCEL_STORAGE_INSTRUCTIONS_FILE_PATH = "files/instructions.pdf"
 const NA = 'NA'
 const NOT_ANSWERD = -99;
 const FAILURE = -1;
-const SUCCESS = 0;
 const ACTION_TYPE = "action_type";
-const DOWNLOAD_FILE = "download_file";
 const DOWNLOAD_EXCEL_DB =  "download_excel_db";
 const DOWNLOAD_INSTRUCTIONS = "download_instructions";
-const UPLOAD_FILE = "upload_file";
 const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
 const CHECK_BOX = "check box";
@@ -69,9 +66,11 @@ app.post("/html_pages/management.html", function(req, res){
     if(action_type == DOWNLOAD_EXCEL_DB){
         console.log("Sending the file db.xlsx to the user");
         res.download(__dirname +'/public/tmp/db.xlsx','db.xlsx');
-    }else if (action_type == DOWNLOAD_INSTRUCTIONS){
+    }
+    else if (action_type == DOWNLOAD_INSTRUCTIONS){
         send_instructions(req, res);
-    }else{
+    }
+    else{
         console.log("Unknown post request");
         res.status(204).send()
     }
@@ -97,9 +96,6 @@ app.post("/get_updated_excel", async function(req, res){
 });
 
 
-
-
-
 app.post("/calculate_answers", async function(req, res){
     console.log("get a calculate_answers request !!!!");
     var data = req.body;
@@ -109,20 +105,11 @@ app.post("/calculate_answers", async function(req, res){
     var updated_clusters = await read_final_grade_and_update_clusters(tmp_file_path, clusters);
     remove_file(tmp_file_path)
     remove_file(get_user_excel_file_name(user_id))
-    var updated_clusters_json_object = JSON.stringify(updated_clusters);
     console.log("this is after calling read_final_grade_and_update_clusters()");
     res.json(updated_clusters);     //send the updated clusters back to the user
 
 });
 
-function remove_file(file_path){
-    try {
-         fs.unlinkSync(file_path)
-    //file removed
-    } catch(err) {
-        console.error(err)
-    }
-}
 
 app.post("/convert_to_ecxel", function(req, res){
     console.log("!!! got a convert_to_ecxe")
@@ -367,4 +354,13 @@ function parse_user_id(req){
 
 function get_user_excel_file_name(user_id){
     return './public/tmp/input'+user_id+'.xlsx';
+}
+
+function remove_file(file_path){
+    try {
+         fs.unlinkSync(file_path)
+    //file removed
+    } catch(err) {
+        console.error(err)
+    }
 }
