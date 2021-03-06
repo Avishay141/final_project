@@ -15,15 +15,15 @@ const storage = new Storage({
     projectId: "nutrition-fbeec"
 });
 const bucketName = "nutrition-fbeec.appspot.com"
-const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx"
-const EXCEL_STORAGE_INSTRUCTIONS_FILE_PATH = "files/instructions.pdf"
+const STORAGE_EXCEL_FILE_PATH = "files/input.xlsx"
+const STORAGE_INSTRUCTIONS_FILE_PATH = "files/instructions.pdf"
+const STORAGE_TEMPLATE_FILE_PATH = "files/template.xlsx"
 
 const NA = 'NA'
 const NOT_ANSWERD = -99;
 const FAILURE = -1;
 const ACTION_TYPE = "action_type";
-const DOWNLOAD_EXCEL_DB =  "download_excel_db";
-const DOWNLOAD_INSTRUCTIONS = "download_instructions";
+const REQUSTED_ACTION = "requested_action";
 const AMERICAN = "אמריקאית";
 const SLIDER = "סליידר";
 const CHECK_BOX = "check box";
@@ -43,6 +43,22 @@ const CLUSTERS_TEST = "clusters_test";
 const CLUSTER_QUESTIONS = "cluster_questions";
 const QUESTION = "question";
 var ANS = "ans";
+
+const DOWNLOAD_FILE = "download_file";
+
+const DOWNLOAD_EXCEL_DB = "download_excel_db";
+
+const DOWNLOAD_FILE_PATH_DICT = {
+    download_excel_file: STORAGE_EXCEL_FILE_PATH,
+    download_template: STORAGE_TEMPLATE_FILE_PATH,
+    download_instructions: STORAGE_INSTRUCTIONS_FILE_PATH
+}
+
+var DOWNLOAD_FILE_NAME_DICT = {
+    download_excel_file: "input.xlsx",
+    download_template: "template.xlsx",
+    download_instructions: "instructions.pdf"
+}
 
 // -----------------------------------------------------------------------------//
 
@@ -67,8 +83,8 @@ app.post("/html_pages/management.html", function(req, res){
         console.log("Sending the file db.xlsx to the user");
         res.download(__dirname +'/public/tmp/db.xlsx','db.xlsx');
     }
-    else if (action_type == DOWNLOAD_INSTRUCTIONS){
-        send_instructions(req, res);
+    else if (action_type == DOWNLOAD_FILE){
+        send_requested_file(req, res);
     }
     else{
         console.log("Unknown post request");
@@ -84,7 +100,7 @@ app.post("/get_updated_excel", async function(req, res){
     var destFilename = get_user_excel_file_name(user_id);
 
     console.log("Getting excel file for user " + user_id);
-    var file_path = EXCEL_STORAGE_FILE_PATH;
+    var file_path = STORAGE_EXCEL_FILE_PATH;
     const options = {
     // The path to which the file should be downloaded, e.g. "./file.txt"
     destination: destFilename,
@@ -135,22 +151,25 @@ app.post("/convert_to_ecxel", function(req, res){
 
 });
 
-async function send_instructions(req, res){
-    console.log("get_instructions was called !!!!");
+async function send_requested_file(req, res){
 
+    console.log("send_reauested_file was called !!!!");
 
-    destFilename =  './public/tmp/instructions.pdf';
+    requested_action = req.body[REQUSTED_ACTION];
+
+    requested_file_name = DOWNLOAD_FILE_NAME_DICT[requested_action];
+    destFilename =  './public/tmp/' + requested_file_name;
     
-    var file_path = EXCEL_STORAGE_INSTRUCTIONS_FILE_PATH;
     const options = {
     // The path to which the file should be downloaded, e.g. "./file.txt"
-    destination: destFilename,
+    destination: destFilename
     };
 
+    var file_path = DOWNLOAD_FILE_PATH_DICT[requested_action];
     // Downloads the file
     await storage.bucket(bucketName).file(file_path).download(options);
     // res.download(destFilename,'instructions.pdf');
-    res.download(destFilename,'instructions.pdf');
+    res.download(destFilename, requested_file_name);
 }
 
 

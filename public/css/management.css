@@ -1,32 +1,64 @@
 
-
-/* ------------------ management styles ----------------------*/
-
-.add_questions, .replyPanel{
-
-text-align: center;
-  
-display: block;
-
-margin-left: auto;
-margin-right: auto ;
+.navbar{
+  background-color: #256e39; /* Green */
+}
+.navbar-toggler{
+  background-color: black;
 }
 
-.input_question{
-
-  display: inline-block;
+.navbar_btn{
+  background-color: #256e39; /* Green */
+  border: none;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-weight: bold;
+  font-style: italic;
+  color: white;
 }
 
-.title{
-    display: inline-block;
-    margin-top:100px;
-    margin-bottom: 30px;
+#tel_hai_icon_img{
+  float:left;
+  margin-left: 0;
 }
 
-/* ul{
-  float: right;
-} */
 
+#title{
+    margin-top: 5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.navbar{
+  direction: rtl;
+  text-align: right;
+}
+
+.card.file{
+  direction: rtl;
+  text-align: right;
+  font-family: 'Suez One', serif;
+  margin: 1rem;
+  width: 15rem;
+  height: 18rem;
+  padding: 0.5rem;
+  box-shadow: 1rem 1rem 1rem  grey;
+}
+
+.btn_download_file{
+    max-width: 50%;
+    max-height: 37%;
+    text-align: center;
+    display:block; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img{
+  max-width: 50%;
+  max-height: 37%;
+  display:block; 
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .col-sm-12.file{
   margin-top: 10px;
@@ -37,12 +69,70 @@ margin-right: auto ;
   margin: 10px;
 }
 
-#input_file_btn{
-  background-color: blueviolet;
+.card.file.excel_input_file{
+  background-color: #00E64D;
+  
+}
+.card.file.export_db{
+  background-color: #667FFF;
+
+}
+.card.file.template{
+  background-color: #FFE14D;
+ 
 }
 
-#title{
-  margin-top: 100px;
+.card.file.instructions{
+  background-color: tomato;
+}
+
+.card-body.upload_file, .card-body.admins{
   text-align: center;
+  box-shadow: 1rem 1rem 0.5rem  grey;
+  margin-top: 2rem;
+  background-color: #f7e7c2;
+  
 }
 
+.card-body.admins{
+  margin-bottom: 2rem;
+}
+
+#upload_form{
+  width: 50%;
+  /* margin: 1rem; */
+  text-align: center;
+  margin: 1rem auto 1rem auto;
+  /* display: inline-block; */
+}
+
+#input_file_btn{
+  width: 70%;
+  border-style: outset;
+  background-color: #D1C4A4;
+}
+
+#upload_btn{
+  width: 40%;
+  height: 4rem;
+  text-align: center;
+  margin: 0 auto 1rem auto;
+  background-color: #000033;
+
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 7px;
+
+}
+
+#upload_btn:hover{
+  background: #001580;
+}
+
+#user_email_for_admin{
+  width: 50%;
+  margin: 0 auto 1rem auto;
+}

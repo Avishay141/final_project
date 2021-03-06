@@ -80,6 +80,7 @@ function get_userID_from_url() {
 
 /* listener for "Next" button */
 $("#next_btn").on("click", function () {
+  
   if (!is_all_question_are_filled()) {
     document.getElementById("fill_question_msg").hidden = false;
     return;
@@ -95,6 +96,7 @@ $("#next_btn").on("click", function () {
   }
 
   show_cluster();
+  scroll_to_top()
 
 });
 
@@ -111,9 +113,14 @@ $("#prev_btn").on("click", function () {
   save_cluster_answers();
   current_cluster_index--;
   show_cluster();
+  scroll_to_top()
 
 });
 
+function scroll_to_top(){
+   /* Scrolling to the top of the page */
+  window.scrollTo(0, 0);
+}
 
 function save_cluster_answers() {
   var curr_cluster = clusters[current_cluster_index];
@@ -168,6 +175,7 @@ async function finish_questionnaire() {
   insert_clusters_to_db();
 
   console.log("@@@ finish questionnaire, your grade: " + final_grade);
+  scroll_to_top()
   display_recomendations();
 
 }
@@ -225,8 +233,14 @@ $("#manage_btn").on("click", function () {
 
 $("#start_quest_btn").on("click", function () {
   run_questionnaire();
-
 });
+
+$("#back_to_main_btn").on("click", function () {
+  location.reload();
+  scroll_to_top();
+});
+
+
 
 async function run_questionnaire() {
   await get_updated_excel_from_storage()
@@ -234,6 +248,7 @@ async function run_questionnaire() {
   load_questions_from_excel_json(quest_json_object);
   hide_and_show_relevant_html_elements();
   show_cluster();
+  scroll_to_top();
 }
 
 async function get_updated_excel_from_storage() {
@@ -266,7 +281,7 @@ async function get_questions_from_server() {
 
 function hide_and_show_relevant_html_elements() {
   // hiding and showing relevant elements in html
-  document.getElementById("start_quest_btn").hidden = true;
+  document.getElementById("welcome_section").hidden = true;
   document.getElementById("card_questions").hidden = false;
 }
 
@@ -279,6 +294,7 @@ function load_questions_from_excel_json(excel_json_obj) {
   var root = Object.keys(excel_json_obj)[0];
   var num_of_questions = (excel_json_obj[root].length) - 1;
 
+  // Starting from index 1 and not 0 becasue the first line in the file contains the column names
   for (var i = 1; i <= num_of_questions; i++) {
     var question = create_question(i, excel_json_obj);
     if (!(cluster_exist(question.cluster))) {
@@ -446,7 +462,8 @@ function get_question_html(quest_obj) {
   if (quest_obj.question_type == CHECK_BOX)
     return create_check_box_quest(quest_obj)
 
-  console.log("Question number " + quest_obj.line + " has unknown question type: " + quest_obj.question_type);
+  console.log("Question number " + quest_obj.line +
+   " has unknown question type: " + quest_obj.question_type);
 
 }
 
@@ -473,12 +490,12 @@ function create_slider_quest(q) {
   quest += '<h6>' + q.quest + '</h6>'
 
   quest += '<div class="range-wrap">';
-  quest += '<span class="font-weight-bold indigo-text mr-2 mt-1">0</span>';
+  // quest += '<span class="font-weight-bold indigo-text mr-2 mt-1">0</span>';
   quest += '<div class="range-value" id="' + RANGE_VLAUE + q.line + '"> </div>';
   quest += '<form>';
   quest += '<input class="rangeSlider" id="' + get_answer_element_id(q) + '" type="range" min="0" max="100" value="0" step="0.1" />';
   quest += '</form>'
-  quest += '<span class="font-weight-bold blue-text mr-2 mt-1">100</span>';
+  // quest += '<span class="font-weight-bold blue-text mr-2 mt-1">100</span>';
   quest += '</div>';
   quest += '</li>';
   quest += '</div>';
@@ -589,11 +606,11 @@ function display_recomendations() {
     }
   }
 
-  $(".recomendations_for_user").empty();
+  $(".recomendations_for_user_ul").empty();
   for (var key in recomenadtions) {
     if (recomenadtions.hasOwnProperty(key) && key != NON && key != NA) {
-      var rec = '<li><span>  ' + key + '.<a href="' + recomenadtions[key] + '" target="_blank">       למידע נוסף</a></span></li>';
-      $(".recomendations_for_user").append(rec);
+      var rec = '<li><span>  ' + key + '.<a href="' + recomenadtions[key] + '" target="_blank">  <br/> למידע נוסף</a></span></li>';
+      $(".recomendations_for_user_ul").append(rec);
     }
   }
   document.getElementById("card_recomendations").hidden = false;

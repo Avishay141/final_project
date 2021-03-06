@@ -3,7 +3,6 @@ const EXCEL_STORAGE_FILE_PATH = "files/input.xlsx";
 const TEMPLATE_FILE_PATH = "files/template.xlsx";
 var db = firebase.database();
 var start_admins_div = document.getElementById('admins_list');
-start_admins_div.style.visibility = 'hidden';
 const file_storage = firebase.storage();
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -108,6 +107,17 @@ $("#manage_admins_btn").on("click", function () {
   admins_div.style.visibility = 'visible';
 });
 
+$("#download_excel_file_visual_btn").on("click",async function(event){
+  document.getElementById("download_excel_file").click()
+});
+
+$("#download_template_visual_btn").on("click",async function(event){
+  document.getElementById("download_template").click();
+});
+
+$("#download_instructions_visual_btn").on("click", function (event) {
+  document.getElementById("download_instructions").click();
+});
 
 $("#export_data_to_excel_btn").on("click", function (event) {
   db.ref("Users/").on("value", read_data);
@@ -185,13 +195,7 @@ function upload_excel_to_storage(){
 
 }
 
-$("#download_excel_file").on("click",async function(event){
-    download_file_form_fb_storage(EXCEL_STORAGE_FILE_PATH);
-});
 
-$("#download_template_file").on("click",async function(event){
-  download_file_form_fb_storage(TEMPLATE_FILE_PATH);
-});
 
 async function download_file_form_fb_storage(file_path){
   var storageRef = file_storage.ref(file_path)

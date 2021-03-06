@@ -8,6 +8,8 @@
 
   <link rel="stylesheet" href="/css/hebrew_format.css">
   <link rel="stylesheet" href="/css/questionnaire.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Akaya+Telivigala&family=Suez+One&display=swap" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -16,7 +18,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md  fixed-top">
     <button class="navbar-toggler"   type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
     aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -24,23 +26,25 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav ml-auto">
-        <button type="button" class="btn btn-dark" id="move_to_main" >בית</button>
-        <button type="button" class="btn btn-dark" id="logout_btn">התנתק</button>
-        <button type="button" class="btn btn-dark" visibility='hidden' id="manage_btn">ניהול</button>
+        <button type="button" class="navbar_btn" id="move_to_main" >בית</button>
+        <button type="button" class="navbar_btn" id="logout_btn">התנתק</button>
+        <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
     </ul>
   </div>
-    <img
-    src="https://www.your-college.com/wp-content/uploads/2018/02/%D7%94%D7%9E%D7%9B%D7%9C%D7%9C%D7%94-%D7%94%D7%90%D7%A7%D7%93%D7%9E%D7%99%D7%AA-%D7%AA%D7%9C-%D7%97%D7%99.png"
-    width="50" height="50" alt="icon">
+    <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
+    
    
   </nav>
   
-  <div class="container">
+  <div class="container" id="main_container">
     <div class="row">
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
-        <button type="button" id="start_quest_btn"> התחל שאלון</button>
-        <p id="finish_msg" hidden></p>
+          <div class="welcome" id="welcome_section">
+            <h2 id="welcome_msg">   ברוכים הבאים לשאלון בנושא תזונה סביבתית</h2>
+            <button type="button" id="start_quest_btn"> התחל שאלון</button>
+            <img src="/images/welcome.jpg" alt="" id="welcome_img">
+         </div>
       </div>
 
       <div class="col-sm-2"></div>
@@ -69,14 +73,20 @@
         </div>
 
         <div class="card recomendations" style="width: 100%;" id="card_recomendations" hidden>
-          <h2 class="card-title" style="height: 5vw" id="cluster_name_title"> המלצות</h2>
+          <h1 id="finish_msg" hidden></h1>
+          <br/>
+          <h2 class="card-title" style="height: 5vw" id="cluster_name_title"> המלצות </h2>
           <div class="card-body">
 
-            <ul class="recomendations_for_user">
+            <div class="recomendations_for_user">
+              <ul class="recomendations_for_user_ul">
 
-            </ul>
-
+              </ul>
           </div>
+            
+          <img src="/images/advices_img.jpg"  alt="icon" id="advices_img">
+          </div>
+          <button type="button" class="btn btn-dark" id="back_to_main_btn">חזרה לדף הראשי</button>
         </div>
 
       </div>

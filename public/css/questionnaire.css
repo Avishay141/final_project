@@ -1,6 +1,51 @@
 
-#start_quest_btn {
+
+
+.navbar{
   background-color: #256e39; /* Green */
+}
+
+.navbar_btn{
+  background-color: #256e39; /* Green */
+  border: none;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-weight: bold;
+  font-style: italic;
+  color: white;
+}
+
+#tel_hai_icon_img{
+  float:left;
+  margin-left: 0;
+}
+
+img{
+  max-width: 50%;
+  max-height: 50%;
+  display:block; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.welcome{
+  text-align: center;
+  margin: 0 auto 0 auto;
+
+}
+#welcome_img{
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 20em;
+}
+#welcome_msg{
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-family: 'Suez One', serif
+}
+#start_quest_btn {
+  background-color: #00a868;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -8,8 +53,14 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 30%;
   margin-top: auto;
+  border-radius: 7px;
+  width: 40%;
+
+}
+
+#start_quest_btn:hover{
+  background: #00a868ce;
 }
 
 .hidden_button {
@@ -17,18 +68,27 @@
 }
 
 .container{
-  margin: 20%;
+  margin: 5em;
   text-align: center;
+
 }
 
 
 .card{
   max-width: 100%;
+  
 }
 
-.card.questtions{
-margin: 1%;
+.card.questions{
+  margin: 1%;
+  box-shadow: 1rem 1rem 1rem  grey;
 
+}
+
+.card.recomendations{
+  border: none;
+  font-family: 'Suez One', serif;
+  box-shadow: 1rem 1rem 1rem  grey;
 }
 
 
@@ -115,11 +175,14 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   width: 30vw;
   position: relative;
   margin-top: 20px;
+  /* flex-direction: row; 
+  display: flex; */
 }
 .range-value{
   position: absolute;
   top: -50%;
 }
+
 .range-value span{
   width: 30px;
   height: 24px;
@@ -151,3 +214,84 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 #fill_question_msg{
   color: red;
 }
+
+#finish_msg{
+  text-align: center;
+  font-family: 'Suez One', serif;
+}
+
+
+/* -------------------------------------- */
+
+
+.recomendations_for_user{
+  width:70%;
+  margin:0 auto;
+  }
+  .recomendations_for_user ul {
+    list-style-type: none;
+    margin: 0;
+    margin-left: 1em;
+    padding: 0;
+    counter-reset: li-counter;
+  }
+  .recomendations_for_user ul li{
+  position: relative;
+  margin-bottom: 1.5em;
+  padding: 0.5em;
+  background-color: #dbe9f4;
+  padding-right: 58px;
+  border-style: groove;
+  font-family: 'Suez One', serif;
+  border-radius: 15px;
+  }
+  
+  .recomendations_for_user a{
+  text-decoration:none;
+  color:black;
+  font-size:15px;
+  font-family: 'Raleway', sans-serif;
+  }
+  
+  .recomendations_for_user li:hover{
+  box-shadow:inset 1em 0 #3CB371;
+  -webkit-transition: box-shadow 0.5s; /* For Safari 3.1 to 6.0 */
+  transition: box-shadow 0.5s;
+  }
+  
+  .recomendations_for_user ul li:before {
+  position: absolute;
+  top: -0.3em;
+  /* left: -0.5em; */
+  right: -0.5em;
+  width: 1.8em;
+  height: 1.2em;
+  font-size: 2em;
+  line-height: 1.2;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  /* background-color: #6CD6CC; */
+  background-color:#3CB371;
+  transform: rotate(-20deg);
+  -ms-transform: rotate(-20deg);
+  -webkit-transform: rotate(-20deg);
+  z-index: 99;
+  overflow: hidden;
+  content: counter(li-counter);
+  counter-increment: li-counter;
+  }
+
+  #back_to_main_btn{
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: auto;
+    border-radius: 7px;
+    width: 25%;
+    margin: 0 auto 1rem auto;
+
+
+  }

@@ -5,36 +5,37 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <link rel="stylesheet" href="/css/management.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Akaya+Telivigala&family=Suez+One&display=swap" rel="stylesheet">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
   <title>management</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js"
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js"
     integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg=="
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
 </head>
 
 <body>
-   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <!-- <nav class="navbar navbar-expand-md  fixed-top"> -->
+    <nav class="navbar navbar-light navbar-expand-sm fixed-top nb">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav ml-auto">
-      <button type="button"  class="btn btn-dark" id="manage_admins_btn" >ערוך מנהלים</button>
-      <button type="button"  class="btn btn-dark" id="logout_btn">התנתק</button>
-      <button type="button"  class="btn btn-dark" id="move_to_main">בית </button>
-    </ul>  
-  </div>  
-    <img
-    src="https://www.your-college.com/wp-content/uploads/2018/02/%D7%94%D7%9E%D7%9B%D7%9C%D7%9C%D7%94-%D7%94%D7%90%D7%A7%D7%93%D7%9E%D7%99%D7%AA-%D7%AA%D7%9C-%D7%97%D7%99.png"
-    width="50" height="50" alt="icon">
- 
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav ml-auto">
+        <button type="button" class="navbar_btn" id="move_to_main">בית</button>
+        <button type="button" class="navbar_btn" id="logout_btn">התנתק</button>
+        <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
+      </ul>
+    </div>
+    <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
+
+
   </nav>
 
   <!--Modal: modalForWrongSignup-->
@@ -59,94 +60,131 @@
   <!--Modal: modalForWrongSignup-->
 
   <div class="container" id="edit_quest_div">
-    <h1 id="title">העלאה והורדת קבצים</h1>
+    <h1 id="title">דף ניהול</h1>
+
+    <div class="row files">
+
+      <div class="col-sm-3 file">
+        <div class="card file excel_input_file">
+          <img class="card-img-top" src="/images/excel_img.png" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">הורדת קובץ אקסל המכיל את השאלות וההמלצות</p>
+            <br/>
+            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_excel_file_visual_btn"/>
+            <form action="" method="post" enctype="multipart/form-data">
+              <input type="text" name="requested_action" value="download_excel_file" hidden/>
+              <button type="submit"  id="download_excel_file" name="action_type" value="download_file" hidden></button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-sm-3 file ">
+        <div class="card file export_db">
+          <img class="card-img-top" src="/images/db_img.png" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">ייצוא נתוני השאלונים לקובץ Excel</p>
+            <br/>
+            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="export_data_to_excel_btn"/>
+
+            <form action="" method="post" enctype="multipart/form-data">
+              <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-sm-3 file">
+        <div class="card file template">
+          <img class="card-img-top" src="/images/template_img.png" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">הורדת קובץ תבנית לבניית שאלון חדש</p>
+            <br/>
+            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_template_visual_btn"/>
+            <form action="" method="post" enctype="multipart/form-data">
+              <input type="text" name="requested_action" value="download_template" hidden/>
+              <button type="submit" id="download_template" name="action_type" value="download_file" hidden></button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="col-sm-3 file">
+        <div class="card file instructions">
+          <img class="card-img-top" src="/images/spec_img.png" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">הורדת קובץ הוראות שמסביר איך למלא את קובץ האקסל בצורה נכונה</p>
+            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_instructions_visual_btn"/>
+            <form action="" method="post" enctype="multipart/form-data">
+              <input type="text" name="requested_action" value="download_instructions" hidden/>
+              <button type="submit"  id="download_instructions" name="action_type" value="download_file" hidden></button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
     <div class="row">
       <div class="col-sm-12 file upload_file">
-        <form class="form" id="upload_form">
-          <input type="file" name="inputFile" id="input_file">
+        <div class="card-body upload_file">
+          <h4>עדכון קובץ השאלות</h4>
+          <form class="form" id="upload_form">
+            <input type="file" name="inputFile" id="input_file_btn">
+            <!-- <button type="button" id="upload_btn" class="btn btn-success">העלה קובץ</button> -->
+          </form>
           <button type="button" id="upload_btn" class="btn btn-success">העלה קובץ</button>
-
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 file download_file">
-        <!-- <form action="" method="post" enctype="multipart/form-data">
-          <button type="submit" class="btn btn-success download_file" name="action_type" value="download_file">Download
-            Excel File</button>
-        </form> -->
-        <button type="submit" class="btn btn-success" id="download_excel_file">הורד קובץ אקסל</button>
-         
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12 file export_to_ecxel">
-        <button type="button" id="export_data_to_excel_btn" class="btn btn-success">ייצא מידע לקובץ אקסל</button>
-
-        <form action="" method="post" enctype="multipart/form-data">
-          <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
-        </form>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12 file download_file">
-        <button type="submit" class="btn btn-dark" id="download_template_file">Download Template </button>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12 file download_instructions">
-        <form action="" method="post" enctype="multipart/form-data">
-          <button type="submit" class="btn btn-dark" id="download_instructions_file" name="action_type" value="download_instructions">Download Instructions </button>
-        </form>
         </div>
-    </div>
+      </div>
 
-    <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body" id="upload_msg">
-            Default message
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="payment-success-ok-btn" class="btn btn-info" data-dismiss="modal">Ok</button>
+      
+      <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-body" id="upload_msg">
+              Default message
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="payment-success-ok-btn" class="btn btn-info" data-dismiss="modal">Ok</button>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
 
-  </div>
+ 
 
-  <div class="container" visibility='hidden' id="admins_list">
-    <h1 id="title">רשימת מנהלים</h1>
     <div class="row">
-      <div class="col-2"></div>
-      <div class="col-8">
-        <div class="list-group" id="list-tab" role="tablist" id="admins_list">
+      <div class="col-sm-12">
+        <div class="card-body admins">
+          <div class="container admins" id="admins_list">
+            <h1 id="admins_list_title">הוספה והסרת מנהלים</h1>
+            
+                <div class="list-group" id="list-tab" role="tablist" id="admins_list">
+                </div>
+                
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Enter email of a user you wish to make admin or remove from admin list</label>
+                  <input type="email" class="form-control" id="user_email_for_admin" aria-describedby="emailHelp" placeholder="Email">
+                  <button type="button" id="add_admin_btn" class="btn btn-success">Add as admin</button>
+                  <button type="button" id="remove_admin_btn" class="btn btn-danger">Remove admin</button>
+                </div>
+          </div>
+
+
         </div>
-        <div class="col-2"></div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-2"></div>
-      <div class="col-8">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Enter email of a user you wish to make admin or remove from admin list</label>
-          <input type="email" class="form-control" id="user_email_for_admin" aria-describedby="emailHelp"
-            placeholder="Email">
-          <button type="button" id="add_admin_btn" class="btn btn-success">Add as admin</button>
-          <button type="button" id="remove_admin_btn" class="btn btn-danger">Remove admin</button>
-        </div>
-        <div class="col-2"></div>
-      </div>
-    </div>
 
 
-    
-  </div>
+</div>
 
 
 
