@@ -8,8 +8,8 @@
 .navbar_btn{
   background-color: #256e39; /* Green */
   border: none;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  margin-left: 0.9em;
+  margin-right: 0.9em;
   font-weight: bold;
   font-style: italic;
   color: white;
@@ -290,7 +290,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     font-size: 16px;
     margin-top: auto;
     border-radius: 7px;
-    width: 25%;
+    width: 70%;
     margin: 0 auto 1rem auto;
 
 

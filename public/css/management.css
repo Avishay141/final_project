@@ -2,15 +2,15 @@
 .navbar{
   background-color: #256e39; /* Green */
 }
-.navbar-toggler{
+/* .navbar-toggler{
   background-color: black;
-}
+} */
 
 .navbar_btn{
   background-color: #256e39; /* Green */
   border: none;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  margin-left: 0.9em;
+  margin-right: 0.9em;
   font-weight: bold;
   font-style: italic;
   color: white;

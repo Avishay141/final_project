@@ -236,6 +236,7 @@ $("#start_quest_btn").on("click", function () {
 });
 
 $("#back_to_main_btn").on("click", function () {
+  scroll_to_top();
   location.reload();
   scroll_to_top();
 });
