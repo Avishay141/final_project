@@ -21,9 +21,8 @@ async function create_admins_list(){
   $('.list-group').empty();
   var a =  await db.ref('Users').orderByChild('admin').equalTo(true).on("child_added" ,async function(snapshot) {
     var value = await snapshot.val();
-    $('.list-group').append("<li class='list-group-item list-group-item-primary'> <b>" + "Name: "+'</b>'+value.name+ '<b>'+"  Email: " +'</b>' +value.userEmail +"</li>");
+    $('.list-group').append("<li class='list-group-item list-group-item-warning'> <b>" +"  Email: " +'</b>' +value.userEmail +"</li>");
   });
-
 }
 
 function get_userID_from_url() {
@@ -121,6 +120,10 @@ $("#download_instructions_visual_btn").on("click", function (event) {
 
 $("#export_data_to_excel_btn").on("click", function (event) {
   db.ref("Users/").on("value", read_data);
+});
+
+$("#show_admin_btn").on("click", async function () {
+  create_admins_list();
 });
 
 async function read_data(data) {
