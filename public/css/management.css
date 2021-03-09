@@ -9,20 +9,18 @@
 .navbar_btn{
   background-color: #256e39; /* Green */
   border: none;
-  margin-left: 0.9em;
-  margin-right: 0.9em;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  margin-top: 1.2rem;
   font-weight: bold;
   font-style: italic;
   color: white;
+ 
 }
 
 #tel_hai_icon_img{
   float:left;
   margin-left: 0;
-}
-
-.navbar_btn{
-  margin-top: 1.2rem;
 }
 
 #title{
