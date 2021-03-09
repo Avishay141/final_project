@@ -18,22 +18,22 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-light navbar-expand-sm static-top nb">
-    <button class="navbar-toggler"   type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <nav class="navbar navbar-light static-top nb ">
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav ml-auto">
-        <button type="button" class="navbar_btn" id="move_to_main" >בית</button>
-        <button type="button" class="navbar_btn" id="logout_btn">התנתק</button>
-        <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
-    </ul>
-  </div>
-    <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
-    
-   
+    <form class="form-inline">
+      <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
+
+      <button type="button" class="navbar_btn" id="move_to_main">בית</button>
+      <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
+
+    </form>
+
+
+    <div class="navbar" id="navbarsExampleDefault">
+      <button type="button" class="navbar_btn" style="float:left;" id="logout_btn">התנתק</button>
+    </div>
+
+
   </nav>
   
   <div class="container" id="main_container">

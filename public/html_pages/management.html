@@ -19,20 +19,20 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-sm static-top nb">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <nav class="navbar navbar-light static-top nb ">
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-      <ul class="navbar-nav ml-auto">
-        <button type="button" class="navbar_btn" id="move_to_main">בית</button>
-        <button type="button" class="navbar_btn" id="logout_btn">התנתק</button>
-        <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
-      </ul>
+    <form class="form-inline">
+      <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
+
+      <button type="button" class="navbar_btn" id="move_to_main">בית</button>
+      <button type="button" class="navbar_btn" visibility='hidden' id="manage_btn">ניהול</button>
+
+    </form>
+
+
+    <div class="navbar" id="navbarsExampleDefault">
+      <button type="button" class="navbar_btn" style="float:left;" id="logout_btn">התנתק</button>
     </div>
-    <img src="/images/tel_hai_icon.png" width="50" height="50" alt="icon" id="tel_hai_icon_img">
 
 
   </nav>
@@ -68,11 +68,12 @@
           <img class="card-img-top" src="/images/excel_img.png" alt="Card image cap">
           <div class="card-body">
             <p class="card-text">הורדת קובץ אקסל המכיל את השאלות וההמלצות</p>
-            <br/>
-            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_excel_file_visual_btn"/>
+            <br />
+            <input type="image" src="/images/download_icon.png" class="btn_download_file"
+              id="download_excel_file_visual_btn" />
             <form action="" method="post" enctype="multipart/form-data">
-              <input type="text" name="requested_action" value="download_excel_file" hidden/>
-              <button type="submit"  id="download_excel_file" name="action_type" value="download_file" hidden></button>
+              <input type="text" name="requested_action" value="download_excel_file" hidden />
+              <button type="submit" id="download_excel_file" name="action_type" value="download_file" hidden></button>
             </form>
           </div>
         </div>
@@ -84,8 +85,9 @@
           <img class="card-img-top" src="/images/db_img.png" alt="Card image cap">
           <div class="card-body">
             <p class="card-text">ייצוא נתוני השאלונים לקובץ Excel</p>
-            <br/>
-            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="export_data_to_excel_btn"/>
+            <br />
+            <input type="image" src="/images/download_icon.png" class="btn_download_file"
+              id="export_data_to_excel_btn" />
 
             <form action="" method="post" enctype="multipart/form-data">
               <button type="submit" id="excel_db_btn" name="action_type" value="download_excel_db" hidden></button>
@@ -100,10 +102,11 @@
           <img class="card-img-top" src="/images/template_img.png" alt="Card image cap">
           <div class="card-body">
             <p class="card-text">הורדת קובץ תבנית לבניית שאלון חדש</p>
-            <br/>
-            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_template_visual_btn"/>
+            <br />
+            <input type="image" src="/images/download_icon.png" class="btn_download_file"
+              id="download_template_visual_btn" />
             <form action="" method="post" enctype="multipart/form-data">
-              <input type="text" name="requested_action" value="download_template" hidden/>
+              <input type="text" name="requested_action" value="download_template" hidden />
               <button type="submit" id="download_template" name="action_type" value="download_file" hidden></button>
             </form>
           </div>
@@ -117,10 +120,11 @@
           <img class="card-img-top" src="/images/spec_img.png" alt="Card image cap">
           <div class="card-body">
             <p class="card-text">הורדת קובץ הוראות שמסביר איך למלא את קובץ האקסל בצורה נכונה</p>
-            <input type="image" src="/images/download_icon.png" class="btn_download_file" id="download_instructions_visual_btn"/>
+            <input type="image" src="/images/download_icon.png" class="btn_download_file"
+              id="download_instructions_visual_btn" />
             <form action="" method="post" enctype="multipart/form-data">
-              <input type="text" name="requested_action" value="download_instructions" hidden/>
-              <button type="submit"  id="download_instructions" name="action_type" value="download_file" hidden></button>
+              <input type="text" name="requested_action" value="download_instructions" hidden />
+              <button type="submit" id="download_instructions" name="action_type" value="download_file" hidden></button>
             </form>
           </div>
         </div>
@@ -141,7 +145,7 @@
         </div>
       </div>
 
-      
+
       <div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -158,24 +162,26 @@
 
     </div>
 
- 
+
 
     <div class="row">
       <div class="col-sm-12">
         <div class="card-body admins">
           <div class="container admins" id="admins_list">
             <h1 id="admins_list_title">הוספה והסרת מנהלים</h1>
-            
-                <div class="list-group" id="list-tab" role="tablist" id="admins_list">
-                </div>
-                
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Enter email of a user you wish to make admin or remove from admin list</label>
-                  <input type="email" class="form-control" id="user_email_for_admin" aria-describedby="emailHelp" placeholder="Email">
-                  <button type="button" id="add_admin_btn" class="btn btn-success">Add as admin</button>
-                  <button type="button" id="remove_admin_btn" class="btn btn-danger">Remove admin</button>
-                  <button type="button" id="show_admin_btn" class="btn btn-info">Show admins</button>
-                </div>
+
+            <div class="list-group" id="list-tab" role="tablist" id="admins_list">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Enter email of a user you wish to make admin or remove from admin
+                list</label>
+              <input type="email" class="form-control" id="user_email_for_admin" aria-describedby="emailHelp"
+                placeholder="Email">
+              <button type="button" id="add_admin_btn" class="btn btn-success">Add as admin</button>
+              <button type="button" id="remove_admin_btn" class="btn btn-danger">Remove admin</button>
+              <button type="button" id="show_admin_btn" class="btn btn-info">Show admins</button>
+            </div>
           </div>
 
 
@@ -184,7 +190,7 @@
     </div>
 
 
-</div>
+  </div>
 
 
 
