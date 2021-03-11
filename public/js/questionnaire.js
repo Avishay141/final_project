@@ -34,6 +34,7 @@ const RADIO_BTN = 'radio_btn';
 const BOX_ANS = 'box_ans';
 const NOT_ANSWERD = -99;
 const QUEST_DIV_ID_PREFIX = 'div_q_';
+var questionnaire_started = false;
 
 /* ----- initialize variables --------- */
 
@@ -92,6 +93,7 @@ $("#next_btn").on("click", function () {
   // chcking that we got to the end of the questionnaire - end of the cluster array (clusters)
   if (current_cluster_index > clusters.length - 1){
     update_answers_of_hidden_quests()
+    questionnaire_started = false;
     return finish_questionnaire();
   }
 
@@ -232,6 +234,10 @@ $("#manage_btn").on("click", function () {
 });
 
 $("#start_quest_btn").on("click", function () {
+  if(questionnaire_started)
+    return;
+
+  questionnaire_started = true;
   run_questionnaire();
 });
 
